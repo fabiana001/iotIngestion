@@ -20,6 +20,7 @@ import java.io.File
 import java.net.InetSocketAddress
 import java.util.Properties
 
+import com.typesafe.config.ConfigFactory
 import kafka.admin.AdminUtils
 import kafka.server.{KafkaConfig, KafkaServer}
 import org.apache.commons.io.FileUtils
@@ -27,7 +28,7 @@ import org.apache.zookeeper.server._
 import org.slf4j.LoggerFactory
 
 /**
- * Created by cgnal on 12/09/16.
+ * Created with <3 by Team Digitale.
  *
  * Run an local instance of zookeeper (localhost:2181) and kafka(localhost:9292)
  */
@@ -150,8 +151,8 @@ object KafkaLocalMain {
     // echo isro  | nc <zookeeper ip> 2181
     val kfServer = new KafkaLocal(true)
     kfServer.start()
-    //val topic = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.topic")
-    //kfServer.createTopic(topic)
+    val topic = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.topic")
+    kfServer.createTopic(topic)
 
     //Thread.sleep(10000)
     //kfServer.stop()

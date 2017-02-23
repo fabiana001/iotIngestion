@@ -1,20 +1,20 @@
-package it.teamDigitale
+package it.teamDigitale.kafkaProducers
 
-import java.security.Timestamp
-import java.util.{Date, Properties}
+import java.util.Properties
 import java.util.concurrent.{Executors, TimeUnit}
 
-import com.sun.javafx.tk.Toolkit.Task
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.slf4j.LoggerFactory
 
+
 /**
-  * Created by fabiana on 23/02/17.
+  * Created with <3 by Team Digitale
+  * Example of a Kafka producer for Torino Iot
   */
 object ProducerMain extends App {
 
-  //FIXEME we should add a redis db in the way to do not have redundant data if the service go down
+  //TODO we should add a redis db in the way to do not have redundant data if the service go down
 
   val logger = LoggerFactory.getLogger(this.getClass)
 
@@ -44,9 +44,13 @@ object ProducerMain extends App {
       lastGeneratedTime match {
         case None =>
           val (time, avro)= TorinoTrafficProducer.run(-1L)
+          //val pippo: Seq[Array[Byte]] = avro.get
           lastGeneratedTime = Some(time)
-          //avro.foreach(_)
-      logger.info(s"Data analyzed for the time ${lastGeneratedTime.getOrElse("")}")
+
+          avro.getOrElse(Seq.empty[Array[Byte]]).foreach(kafkaClient.exec(_))
+
+          logger.info(s"Data analyzed for the time ${lastGeneratedTime.getOrElse("")}")
+
         case Some(t) =>
           val (time, avro) = TorinoTrafficProducer.run(t)
           lastGeneratedTime = Some(time)

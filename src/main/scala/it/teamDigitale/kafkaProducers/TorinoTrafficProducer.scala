@@ -1,18 +1,16 @@
-package it.teamDigitale
+package it.teamDigitale.kafkaProducers
 
 import java.nio.ByteBuffer
-import java.security.Timestamp
-import java.text.{DateFormat, SimpleDateFormat}
-import java.util.TimerTask
+import java.text.SimpleDateFormat
 
 import it.teamDigitale.avro.{Event, EventAvroConverter}
 
-import scala.xml.{NamespaceBinding, NodeSeq, TopScope, XML}
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Seq
+import scala.xml.{NodeSeq, XML}
 
 /**
-  * Created by fabiana on 23/02/17.
+  * Created with <3 by Team Digitale.
   */
 object TorinoTrafficProducer {
   val url = "http://opendata.5t.torino.it/get_fdt"
