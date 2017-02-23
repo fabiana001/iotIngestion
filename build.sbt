@@ -33,7 +33,7 @@ wartremoverErrors ++= Seq(
   //Wart.Any,
   Wart.Any2StringAdd,
   //  Wart.AsInstanceOf,
-  Wart.DefaultArguments,
+  //Wart.DefaultArguments,
   Wart.EitherProjectionPartial,
   Wart.Enumeration,
   //  Wart.Equals,
@@ -50,8 +50,8 @@ wartremoverErrors ++= Seq(
   //  Wart.NonUnitStatements,
   Wart.Nothing,
   Wart.Null,
-  Wart.Option2Iterable,
-  Wart.OptionPartial,
+  //Wart.Option2Iterable,
+  //Wart.OptionPartial,
   Wart.Overloading,
   Wart.Product,
   Wart.Return,
@@ -63,9 +63,7 @@ wartremoverErrors ++= Seq(
   Wart.While
 )
 
-//val kafkaVersion = "0.10.1.1"
-
-val kafkaVersion = "0.10.0-kafka-2.1.0"
+val kafkaVersion = "0.9.0.1"
 
 val camelVersion = "2.18.1"
 
@@ -76,8 +74,7 @@ val apacheLog4jVersion = "2.7"
 val scalaTestVersion = "3.0.0"
 
 resolvers ++= Seq(
-  Resolver.mavenLocal,
-  "cloudera" at "https://repository.cloudera.com/artifactory/cloudera-repos/"
+  Resolver.mavenLocal
 )
 
 libraryDependencies ++= Seq(
@@ -88,8 +85,11 @@ libraryDependencies ++= Seq(
   "org.apache.camel" % "camel-stream" % camelVersion % "compile",
   "org.scala-lang.modules" %% "scala-xml" % scalaxmlVersion % "compile",
   "org.apache.camel" % "camel-kafka" % camelVersion % "compile" exclude("org.apache.kafka", "kafka-clients"),
-  //"commons-io" % "commons-io" % "2.5",
+
+  "com.typesafe" % "config" % "1.0.2",
   "org.apache.avro" % "avro" % "1.8.1",
+  "com.twitter" %% "bijection-avro" % "0.9.2",
+  "com.twitter" %% "bijection-core" % "0.9.2",
   //Logging Dependencies
   "org.apache.logging.log4j" % "log4j-api" % apacheLog4jVersion % "compile",
   "org.apache.logging.log4j" % "log4j-core" % apacheLog4jVersion % "compile",
@@ -104,6 +104,8 @@ libraryDependencies ++= Seq(
   "org.apache.kafka" %% "kafka" % kafkaVersion % "test" classifier "test",
   "org.apache.kafka" % "kafka-clients" % kafkaVersion % "compile",
   "org.apache.kafka" % "kafka-clients" % kafkaVersion % "test" classifier "test",
+  "org.apache.commons" % "commons-io" % "1.3.2" % "test",
+
   //Test Dependencies
   "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
 )
@@ -112,25 +114,18 @@ lazy val root = (project in file(".")).
   configs(IntegrationTest).
   settings(Defaults.itSettings: _*).
   settings(
-    libraryDependencies += "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test",
-    headers := Map(
-      "sbt" -> Apache2_0("2016", "CGnal S.p.A."),
-      "scala" -> Apache2_0("2016", "CGnal S.p.A."),
-      "conf" -> Apache2_0("2016", "CGnal S.p.A.", "#"),
-      "properties" -> Apache2_0("2016", "CGnal S.p.A.", "#")
-    )
+    libraryDependencies += "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
   ).
   enablePlugins(AutomateHeaderPlugin, JavaAppPackaging, DockerPlugin).
   disablePlugins(AssemblyPlugin)
 
-lazy val projectAssembly = (project in file("assembly")).
-  settings(
-    mainClass in assembly := Some("it.teamDigitale.examples.kafka_camel_example.MyRouteMain"),
-    assemblyJarName in assembly := s"$assemblyName-${version.value}.jar"
-  ) dependsOn root
-
-scriptClasspath ++= Seq(s"$assemblyName-${version.value}.jar")
-
+//lazy val projectAssembly = (project in file("assembly")).
+//  settings(
+//    mainClass in assembly := Some("it.teamDigitale.examples.kafka_camel_example.MyRouteMain"),
+//    assemblyJarName in assembly := s"$assemblyName-${version.value}.jar"
+//  ) dependsOn root
+//
+//scriptClasspath ++= Seq(s"$assemblyName-${version.value}.jar")
 
 
     
