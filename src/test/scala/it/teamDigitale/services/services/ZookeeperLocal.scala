@@ -7,7 +7,7 @@ import org.apache.commons.io.FileUtils
 import org.apache.zookeeper.server.{ServerCnxnFactory, ZooKeeperServer}
 
 /**
-  * Created by cgnal on 20/09/16.
+  * Created with <3 by Team Digitale
   */
 class ZookeeperLocal(port: Int) {
 

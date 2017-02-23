@@ -1,4 +1,4 @@
-package it.teamDigitale
+package it.teamDigitale.kafkaProducers
 
 import java.util.Properties
 
@@ -7,7 +7,9 @@ import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
 import scala.util.Try
 
 /**
-  * Created by fabiana on 23/02/17.
+  * Created with <3 by Team Digitale
+  *
+  * It sends events to a kafka queue
   */
 class KafkaEventProducer(props: Properties, topic: String) {
 

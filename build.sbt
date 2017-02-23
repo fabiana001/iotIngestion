@@ -90,6 +90,7 @@ libraryDependencies ++= Seq(
   "org.apache.avro" % "avro" % "1.8.1",
   "com.twitter" %% "bijection-avro" % "0.9.2",
   "com.twitter" %% "bijection-core" % "0.9.2",
+
   //Logging Dependencies
   "org.apache.logging.log4j" % "log4j-api" % apacheLog4jVersion % "compile",
   "org.apache.logging.log4j" % "log4j-core" % apacheLog4jVersion % "compile",

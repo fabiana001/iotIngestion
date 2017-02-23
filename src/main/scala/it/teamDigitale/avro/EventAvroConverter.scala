@@ -4,7 +4,8 @@ import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 
 /**
-  * Created by fabiana on 23/02/17.
+  * Created with <3 by Team Digitale.
+  * It converts a standard Event into an avro format
   */
 object EventAvroConverter {
   implicit private val specificAvroBinaryInjection: Injection[Event, Array[Byte]] = SpecificAvroCodecs.toBinary[Event]
