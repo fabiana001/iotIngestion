@@ -30,7 +30,7 @@ scalacOptions ++= Seq(
 )
 
 wartremoverErrors ++= Seq(
-  Wart.Any,
+  //Wart.Any,
   Wart.Any2StringAdd,
   //  Wart.AsInstanceOf,
   Wart.DefaultArguments,
@@ -41,7 +41,7 @@ wartremoverErrors ++= Seq(
   Wart.FinalCaseClass,
   Wart.FinalVal,
   Wart.ImplicitConversion,
-  Wart.IsInstanceOf,
+  //Wart.IsInstanceOf,
   Wart.JavaConversions,
   Wart.LeakingSealed,
   Wart.ListOps,
@@ -88,7 +88,8 @@ libraryDependencies ++= Seq(
   "org.apache.camel" % "camel-stream" % camelVersion % "compile",
   "org.scala-lang.modules" %% "scala-xml" % scalaxmlVersion % "compile",
   "org.apache.camel" % "camel-kafka" % camelVersion % "compile" exclude("org.apache.kafka", "kafka-clients"),
-  "commons-io" % "commons-io" % "2.5",
+  //"commons-io" % "commons-io" % "2.5",
+  "org.apache.avro" % "avro" % "1.8.1",
   //Logging Dependencies
   "org.apache.logging.log4j" % "log4j-api" % apacheLog4jVersion % "compile",
   "org.apache.logging.log4j" % "log4j-core" % apacheLog4jVersion % "compile",
