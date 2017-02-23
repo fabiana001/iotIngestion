@@ -5,10 +5,11 @@ import java.security.Timestamp
 import java.text.{DateFormat, SimpleDateFormat}
 import java.util.TimerTask
 
-import it.teamDigitale.avro.Event
+import it.teamDigitale.avro.{Event, EventAvroConverter}
 
 import scala.xml.{NamespaceBinding, NodeSeq, TopScope, XML}
 import scala.collection.JavaConverters._
+import scala.collection.immutable.Seq
 
 /**
   * Created by fabiana on 23/02/17.
@@ -16,9 +17,10 @@ import scala.collection.JavaConverters._
 object TorinoTrafficProducer {
   val url = "http://opendata.5t.torino.it/get_fdt"
 
+
   import TorinoEventProcessor._
 
-  def run(time:Long): Long = {
+  def run(time:Long): (Long, Option[Seq[Array[Byte]]]) = {
     val xml = XML.load(url)
     val traffic_data: NodeSeq = xml \\ "traffic_data"
     val ftd_data = traffic_data \\ "FDT_data"
@@ -30,10 +32,11 @@ object TorinoTrafficProducer {
         tag <- ftd_data
       } yield convertEvent(tag, generationTimestamp)
 
-      tags.foreach(println(_))
-      generationTimestamp
+      val avro = tags.map(x => EventAvroConverter.convert(x))
+      avro.foreach(println(_))
+      (generationTimestamp, Some(avro))
     } else {
-      time
+      (time, None)
     }
 
 
