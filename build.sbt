@@ -29,56 +29,75 @@ scalacOptions ++= Seq(
   "-Xfuture"
 )
 
-wartremoverErrors ++= Seq(
-  //Wart.Any,
-  Wart.Any2StringAdd,
-  //  Wart.AsInstanceOf,
-  //Wart.DefaultArguments,
-  Wart.EitherProjectionPartial,
-  Wart.Enumeration,
-  //  Wart.Equals,
-  Wart.ExplicitImplicitTypes,
-  Wart.FinalCaseClass,
-  Wart.FinalVal,
-  Wart.ImplicitConversion,
-  //Wart.IsInstanceOf,
-  Wart.JavaConversions,
-  Wart.LeakingSealed,
-  Wart.ListOps,
-  Wart.MutableDataStructures,
-  Wart.NoNeedForMonad,
-  //  Wart.NonUnitStatements,
-  Wart.Nothing,
-  Wart.Null,
-  //Wart.Option2Iterable,
-  //Wart.OptionPartial,
-  Wart.Overloading,
-  Wart.Product,
-  Wart.Return,
-  Wart.Serializable,
-  //  Wart.Throw,
-  Wart.ToString,
-  Wart.TryPartial,
-  //  Wart.Var,
-  Wart.While
-)
+//wartremoverErrors ++= Seq(
+//  //Wart.Any,
+//  Wart.Any2StringAdd,
+//  //  Wart.AsInstanceOf,
+//  //Wart.DefaultArguments,
+//  Wart.EitherProjectionPartial,
+//  Wart.Enumeration,
+//  //  Wart.Equals,
+//  Wart.ExplicitImplicitTypes,
+//  Wart.FinalCaseClass,
+//  Wart.FinalVal,
+//  Wart.ImplicitConversion,
+//  //Wart.IsInstanceOf,
+//  Wart.JavaConversions,
+//  Wart.LeakingSealed,
+//  Wart.ListOps,
+//  Wart.MutableDataStructures,
+//  Wart.NoNeedForMonad,
+//  //  Wart.NonUnitStatements,
+//  //Wart.Nothing,
+//  Wart.Null,
+//  //Wart.Option2Iterable,
+//  //Wart.OptionPartial,
+//  Wart.Overloading,
+//  Wart.Product,
+//  Wart.Return,
+//  //Wart.Serializable,
+//  //  Wart.Throw,
+//  Wart.ToString,
+//  Wart.TryPartial,
+//  //  Wart.Var,
+//  Wart.While
+//)
 
 val kafkaVersion = "0.9.0.1"
-
 val camelVersion = "2.18.1"
-
 val scalaxmlVersion = "1.0.6"
-
 val apacheLog4jVersion = "2.7"
-
 val scalaTestVersion = "3.0.0"
+val sparkVersion = "2.1.0"
+val sparkAvroVersion = "3.2.0"
 
 resolvers ++= Seq(
   Resolver.mavenLocal
 )
 
-libraryDependencies ++= Seq(
-  //Camel Dependencies
+/**
+  * unless Spark and hadoop get in  trouble about signed jars.
+  */
+val hadoopHBaseExcludes =
+  (moduleId: ModuleID) => moduleId.
+    excludeAll(ExclusionRule(organization = "org.mortbay.jetty")).
+    excludeAll(ExclusionRule(organization = "org.eclipse.jetty")).
+    excludeAll(ExclusionRule(organization = "javax.servlet"))
+
+
+/**
+* when used inside the IDE they are imported with scope "compile",
+* Otherwise when submitted with spark_submit they are  "provided"
+*/
+def providedOrCompileDependencies(scope: String = "compile"): Seq[ModuleID] = Seq(
+  //For spark Streaming Dependencies
+  hadoopHBaseExcludes("com.databricks" %% "spark-avro" % sparkAvroVersion % "compile"),
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming-kafka-0-8" % sparkVersion),
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-core" % sparkVersion % scope),
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming" % sparkVersion % scope))
+
+val commonDependencies = Seq(
+  //For Camel Dependencies
   "org.apache.camel" % "camel-core" % camelVersion % "compile",
   "org.apache.camel" % "camel-scala" % camelVersion % "compile",
   "org.apache.camel" % "camel-http4" % camelVersion % "compile",
@@ -87,6 +106,8 @@ libraryDependencies ++= Seq(
   "org.apache.camel" % "camel-kafka" % camelVersion % "compile" exclude("org.apache.kafka", "kafka-clients"),
 
   "com.typesafe" % "config" % "1.0.2",
+
+  //avro dependencies
   "org.apache.avro" % "avro" % "1.8.1",
   "com.twitter" %% "bijection-avro" % "0.9.2",
   "com.twitter" %% "bijection-core" % "0.9.2",
@@ -111,11 +132,13 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
 )
 
+
+
 lazy val root = (project in file(".")).
   configs(IntegrationTest).
   settings(Defaults.itSettings: _*).
   settings(
-    libraryDependencies += "org.scalatest" %% "scalatest" % scalaTestVersion % "it,test"
+    libraryDependencies ++= commonDependencies ++ providedOrCompileDependencies()
   ).
   enablePlugins(AutomateHeaderPlugin, JavaAppPackaging, DockerPlugin).
   disablePlugins(AssemblyPlugin)
