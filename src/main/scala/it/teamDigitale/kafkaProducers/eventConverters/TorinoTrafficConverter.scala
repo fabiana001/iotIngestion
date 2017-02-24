@@ -1,4 +1,4 @@
-package it.teamDigitale.kafkaProducers
+package it.teamDigitale.kafkaProducers.eventConverters
 
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
@@ -10,37 +10,34 @@ import scala.collection.immutable.Seq
 import scala.xml.{NodeSeq, XML}
 
 /**
-  * Created with <3 by Team Digitale.
-  */
-object TorinoTrafficProducer {
+ * Created with <3 by Team Digitale.
+ */
+class TorinoTrafficConverter extends EventConverter {
+
+  import TorinoTrafficConverter._
   val url = "http://opendata.5t.torino.it/get_fdt"
-
-
-  import TorinoEventProcessor._
-
-  def run(time:Long): (Long, Option[Seq[Array[Byte]]]) = {
+  def convert(time: Long): (Long, Option[Seq[Array[Byte]]]) = {
     val xml = XML.load(url)
     val traffic_data: NodeSeq = xml \\ "traffic_data"
     val ftd_data = traffic_data \\ "FDT_data"
     val generationTimeString = (traffic_data \\ "@generation_time").text
     val generationTimestamp = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(generationTimeString).getTime
 
-    if(generationTimestamp > time) {
+    if (generationTimestamp > time) {
       val tags = for {
         tag <- ftd_data
       } yield convertEvent(tag, generationTimestamp)
 
       val avro = tags.map(x => EventAvroConverter.convert(x))
-      avro.foreach(println(_))
+      //avro.foreach(println(_))
       (generationTimestamp, Some(avro))
     } else {
       (time, None)
     }
 
-
   }
 
-  private def convertEvent(ftd_data: NodeSeq, generationTimestamp: Long) : Event = {
+  private def convertEvent(ftd_data: NodeSeq, generationTimestamp: Long): Event = {
 
     val lcd1 = (ftd_data \ "@lcd1").text
     val road_LCD = (ftd_data \ "@Road_LCD").text
@@ -50,12 +47,13 @@ object TorinoTrafficProducer {
     val lon = (ftd_data \ "@lng").text
     val latLon = s"$lat-$lon"
     val direction = (ftd_data \ "@direction").text
-    val accuracy =(ftd_data \ "@accuracy").text
+    val accuracy = (ftd_data \ "@accuracy").text
     val period = (ftd_data \ "@period").text
-    val flow = (ftd_data \\ "speedflow" \"@flow").text
-    val speed = (ftd_data \\ "speedflow" \"@speed").text
+    val flow = (ftd_data \\ "speedflow" \ "@flow").text
+    val speed = (ftd_data \\ "speedflow" \ "@speed").text
 
-    val attributes: Map[CharSequence, CharSequence] = Map(att_lcd1 -> lcd1,
+    val attributes: Map[CharSequence, CharSequence] = Map(
+      att_lcd1 -> lcd1,
       att_road_LCD -> road_LCD,
       att_road_name -> road_name,
       att_offset -> offset,
@@ -73,12 +71,13 @@ object TorinoTrafficProducer {
       latLon,
       url,
       ByteBuffer.wrap(ftd_data.toString().getBytes()),
-      attributes.asJava)
+      attributes.asJava
+    )
   }
 
 }
 
-object TorinoEventProcessor{
+object TorinoTrafficConverter {
 
   val att_lcd1 = stringToCharSequence("FDT_data")
   val att_road_LCD = stringToCharSequence("Road_LCD")
@@ -92,5 +91,4 @@ object TorinoEventProcessor{
 
   def stringToCharSequence(x: String): CharSequence = x.asInstanceOf[CharSequence]
 }
-
 

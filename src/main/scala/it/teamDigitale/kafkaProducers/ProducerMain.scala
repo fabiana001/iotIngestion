@@ -4,14 +4,14 @@ import java.util.Properties
 import java.util.concurrent.{Executors, TimeUnit}
 
 import com.typesafe.config.ConfigFactory
+import it.teamDigitale.kafkaProducers.eventConverters.TorinoTrafficConverter
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.slf4j.LoggerFactory
 
-
 /**
-  * Created with <3 by Team Digitale
-  * Example of a Kafka producer for Torino Iot
-  */
+ * Created with <3 by Team Digitale
+ * Example of a Kafka producer for Torino Iot
+ */
 object ProducerMain extends App {
 
   //TODO we should add a redis db in the way to do not have redundant data if the service go down
@@ -35,27 +35,23 @@ object ProducerMain extends App {
   props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializer)
   props.put("zookeeper.connect", zookeepers)
 
-  val kafkaClient = new KafkaEventProducer(props, topic)
+
+  val kafkaEventClient = new KafkaEventProducer[TorinoTrafficConverter](props, topic)
 
   val ex = Executors.newScheduledThreadPool(1)
 
   val task = new Runnable {
     def run() = {
-      lastGeneratedTime match {
+      val time = lastGeneratedTime match {
         case None =>
-          val (time, avro)= TorinoTrafficProducer.run(-1L)
-          //val pippo: Seq[Array[Byte]] = avro.get
-          lastGeneratedTime = Some(time)
-
-          avro.getOrElse(Seq.empty[Array[Byte]]).foreach(kafkaClient.exec(_))
-
-          logger.info(s"Data analyzed for the time ${lastGeneratedTime.getOrElse("")}")
-
+          val time = kafkaEventClient.run(-1L)
+          logger.info(s"Data analyzed for the time ${time}")
+          time
         case Some(t) =>
-          val (time, avro) = TorinoTrafficProducer.run(t)
-          lastGeneratedTime = Some(time)
-          ()
+          kafkaEventClient.run(t)
+
       }
+      lastGeneratedTime = Some(time)
     }
   }
   ex.scheduleAtFixedRate(task, 2, 5, TimeUnit.SECONDS)
