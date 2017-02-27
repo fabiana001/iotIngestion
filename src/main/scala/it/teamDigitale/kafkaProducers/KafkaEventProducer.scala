@@ -4,11 +4,11 @@ import java.io.Serializable
 import java.util.Properties
 
 import it.teamDigitale.kafkaProducers.eventConverters.EventConverter
-import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
+import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerRecord }
 import org.slf4j.LoggerFactory
 
-import scala.reflect.{ClassTag, classTag}
-import scala.util.{Failure, Try}
+import scala.reflect.{ ClassTag, classTag }
+import scala.util.{ Failure, Try }
 
 /**
  * Created with <3 by Team Digitale
@@ -24,17 +24,21 @@ class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic
   def run(time: Long): Long = {
 
     val (newTime, avro) = converter.convert(time)
-    avro.getOrElse(Seq.empty[Array[Byte]]).foreach{data =>
+    avro.getOrElse(Seq.empty[Array[Byte]]).foreach { data =>
       exec(data) match {
         case Failure(ex) => logger.error(s"${ex.getStackTrace}")
         case _ =>
       }
     }
+
+    if (avro.nonEmpty)
+      producer.flush()
     newTime
   }
 
   def exec(bytes: Array[Byte]): Try[Unit] = Try {
     val message = new ProducerRecord[Array[Byte], Array[Byte]](topic, bytes)
+    println(message)
     producer.send(message)
     ()
   }
