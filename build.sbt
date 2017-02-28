@@ -1,13 +1,13 @@
 import de.heikoseeberger.sbtheader.license.Apache2_0
 import sbt._
 
-name := "kafka-camel-example"
+name := "iotIngestion"
 
-organization := "it.davidgreco.examples"
+organization := "it.teamDigitale"
 
 version := "1.0"
 
-val assemblyName = "kafka-camel-example-assembly"
+val assemblyName = "iotIngestion"
 
 scalaVersion in ThisBuild := "2.11.8"
 

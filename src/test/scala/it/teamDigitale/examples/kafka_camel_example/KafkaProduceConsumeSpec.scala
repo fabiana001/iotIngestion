@@ -16,24 +16,24 @@
 
 package it.teamDigitale.examples.kafka_camel_example
 
-import java.io.{File, FileNotFoundException, IOException}
+import java.io.{ File, FileNotFoundException, IOException }
 import java.net.ServerSocket
 import java.util.Properties
 
-import kafka.server.{KafkaConfig, KafkaServer}
-import kafka.utils.{MockTime, TestUtils, ZkUtils}
+import kafka.server.{ KafkaConfig, KafkaServer }
+import kafka.utils.{ MockTime, TestUtils, ZkUtils }
 import kafka.zk.EmbeddedZookeeper
 import org.I0Itec.zkclient.ZkClient
 import org.I0Itec.zkclient.serialize.ZkSerializer
 import org.apache.camel.builder.RouteBuilder
 import org.apache.camel.component.kafka.KafkaConstants
-import org.apache.camel.component.mock.{MockComponent, MockEndpoint}
+import org.apache.camel.component.mock.{ MockComponent, MockEndpoint }
 import org.apache.camel.impl.DefaultCamelContext
-import org.apache.camel.{Exchange, Processor}
-import org.scalatest.{BeforeAndAfterAll, MustMatchers, WordSpec}
+import org.apache.camel.{ Exchange, Processor }
+import org.scalatest.{ BeforeAndAfterAll, MustMatchers, WordSpec }
 
 import scala.language.existentials
-import scala.util.{Failure, Random, Try}
+import scala.util.{ Failure, Random, Try }
 
 class KafkaProduceConsumeSpec extends WordSpec with MustMatchers with BeforeAndAfterAll {
 
@@ -132,7 +132,7 @@ class KafkaProduceConsumeSpec extends WordSpec with MustMatchers with BeforeAndA
     zkUtils.foreach(_.close())
     zookeeperServer.foreach(_.shutdown())
   }
-/*
+  /*
   override def beforeAll: Unit = {
     zookeeperServer = makeZookeeperServer()
     zkUtils = for {
