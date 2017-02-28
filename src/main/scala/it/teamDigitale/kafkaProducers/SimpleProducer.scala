@@ -2,6 +2,7 @@ package it.teamDigitale.kafkaProducers
 
 import java.time.LocalDateTime
 
+import com.typesafe.config.ConfigFactory
 import kafka.admin.AdminClient
 import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerConfig, ProducerRecord }
 
@@ -11,7 +12,9 @@ import scala.util.Random
  * Created by fabiana on 27/02/17.
  */
 object SimpleProducer extends App {
-  val topic = "prova"
+
+  var con = ConfigFactory.load()
+  val topic = con.getString("spark-opentsdb-exmaples.kafka.topic")
   val brokers = "127.0.0.1:9092"
 
   private val config: Map[String, Object] = Map[String, Object](

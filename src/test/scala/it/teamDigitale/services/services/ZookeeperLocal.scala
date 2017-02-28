@@ -4,11 +4,11 @@ import java.io.File
 import java.net.InetSocketAddress
 
 import org.apache.commons.io.FileUtils
-import org.apache.zookeeper.server.{ServerCnxnFactory, ZooKeeperServer}
+import org.apache.zookeeper.server.{ ServerCnxnFactory, ZooKeeperServer }
 
 /**
-  * Created with <3 by Team Digitale.
-  */
+ * Created with <3 by Team Digitale.
+ */
 class ZookeeperLocal(port: Int) {
 
   var zkServer: Option[ServerCnxnFactory] = None

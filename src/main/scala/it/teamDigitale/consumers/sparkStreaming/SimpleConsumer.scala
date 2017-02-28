@@ -28,7 +28,7 @@ object SimpleConsumer {
     props.put("group.id", "test_consumer")
 
     val consumer = new KafkaConsumer(props, new ByteArrayDeserializer(), new ByteArrayDeserializer())
-    consumer.subscribe(Set(topic).asJava)
+    consumer.subscribe(Set(topic, "prova").asJava)
 
     while (true) {
       println(s"ciao $brokers")
