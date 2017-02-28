@@ -152,5 +152,4 @@ lazy val projectAssembly = (project in file("assembly")).
 
 scriptClasspath ++= Seq(s"$assemblyName-${version.value}.jar")
 
-
     

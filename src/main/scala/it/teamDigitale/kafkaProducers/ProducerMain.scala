@@ -34,9 +34,12 @@ object ProducerMain extends App {
   props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers)
   props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, serializer)
   props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializer)
-  props.put("enable.auto.commit", "true")
-  props.put("zookeeper.connect", zookeepers)
-  props.put("auto.offset.reset", "earliest")
+  //props.put("enable.auto.commit", "true")
+  props.put("enable.zookeeper", "true")
+  //props.put("zookeeper.connect", zookeepers)
+  //props.put("auto.offset.reset", "earliest")
+
+  logger.info(s"Kafka Bootstrap Servers $brokers, topic $topic")
 
   val kafkaEventClient = new KafkaEventProducer[TorinoTrafficConverter](props, topic)
 

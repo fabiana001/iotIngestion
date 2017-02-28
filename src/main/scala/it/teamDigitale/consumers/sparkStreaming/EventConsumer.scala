@@ -80,21 +80,21 @@ object EventConsumerMain {
       "bootstrap.servers" -> servers,
       "key.deserializer" -> classOf[ByteArrayDeserializer],
       "value.deserializer" -> classOf[ByteArrayDeserializer],
-      "auto.offset.reset" -> "earliest",
+      //"auto.offset.reset" -> "earliest",
       "enable.auto.commit" -> (false: java.lang.Boolean),
-      "group.id" -> "pippo2"
+      "group.id" -> "test_event_consumer"
     )
 
-    //val stream = new EventConsumer(ssc, Set(topic), props).run()
+    val stream = new EventConsumer(ssc, Set(topic), props).run()
 
-    val stream = KafkaUtils.createDirectStream(ssc, PreferConsistent, Subscribe[Array[Byte], Array[Byte]](Set(topic), props))
-    val pippo = stream.map { record =>
-      record.value()
-    }
-    pippo.print(100)
+    //    val stream = KafkaUtils.createDirectStream(ssc, PreferConsistent, Subscribe[Array[Byte], Array[Byte]](Set(topic), props))
+    //    val pippo = stream.map { record =>
+    //      record.value()
+    //    }
+    //    pippo.print(100)
 
     stream.print(100)
-    stream.foreachRDD(rdd => rdd.foreach(println(_)))
+    //stream.foreachRDD(rdd => rdd.foreach(println(_)))
 
     ssc.start()
     ssc.awaitTermination()
