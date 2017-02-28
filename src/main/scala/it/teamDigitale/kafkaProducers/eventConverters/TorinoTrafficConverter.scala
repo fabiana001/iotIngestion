@@ -3,11 +3,11 @@ package it.teamDigitale.kafkaProducers.eventConverters
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 
-import it.teamDigitale.avro.{Event, EventAvroConverter}
+import it.teamDigitale.avro.{ Event, EventAvroConverter }
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Seq
-import scala.xml.{NodeSeq, XML}
+import scala.xml.{ NodeSeq, XML }
 
 /**
  * Created with <3 by Team Digitale.

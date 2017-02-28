@@ -22,7 +22,7 @@ import java.util.Properties
 
 import com.typesafe.config.ConfigFactory
 import kafka.admin.AdminUtils
-import kafka.server.{KafkaConfig, KafkaServer}
+import kafka.server.{ KafkaConfig, KafkaServer }
 import org.apache.commons.io.FileUtils
 import org.apache.zookeeper.server._
 import org.slf4j.LoggerFactory
@@ -123,7 +123,7 @@ class KafkaLocal(var runZookeeper: Boolean = true) {
   }
 
   def start(): Unit = {
-    if(runZookeeper){
+    if (runZookeeper) {
       startZK()
       Thread.sleep(5000)
     }
@@ -133,7 +133,7 @@ class KafkaLocal(var runZookeeper: Boolean = true) {
 
   def stop(): Unit = {
     stopKafka()
-    if(runZookeeper){
+    if (runZookeeper) {
       Thread.sleep(2000)
       stopZK()
     }
@@ -144,7 +144,6 @@ class KafkaLocal(var runZookeeper: Boolean = true) {
 
 object KafkaLocalMain {
   def main(args: Array[String]): Unit = {
-
 
     //echo stat | nc <zookeeper ip> 2181
     //echo mntr | nc <zookeeper ip> 2181

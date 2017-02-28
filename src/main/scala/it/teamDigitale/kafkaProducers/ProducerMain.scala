@@ -1,11 +1,12 @@
 package it.teamDigitale.kafkaProducers
 
 import java.util.Properties
-import java.util.concurrent.{Executors, TimeUnit}
+import java.util.concurrent.{ Executors, TimeUnit }
 
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.kafkaProducers.eventConverters.TorinoTrafficConverter
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.slf4j.LoggerFactory
 
 /**
@@ -33,8 +34,12 @@ object ProducerMain extends App {
   props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers)
   props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, serializer)
   props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializer)
-  props.put("zookeeper.connect", zookeepers)
+  //props.put("enable.auto.commit", "true")
+  props.put("enable.zookeeper", "true")
+  //props.put("zookeeper.connect", zookeepers)
+  //props.put("auto.offset.reset", "earliest")
 
+  logger.info(s"Kafka Bootstrap Servers $brokers, topic $topic")
 
   val kafkaEventClient = new KafkaEventProducer[TorinoTrafficConverter](props, topic)
 
@@ -46,6 +51,7 @@ object ProducerMain extends App {
         case None =>
           val time = kafkaEventClient.run(-1L)
           logger.info(s"Data analyzed for the time ${time}")
+          println(s"Data analyzed for the time ${time}")
           time
         case Some(t) =>
           kafkaEventClient.run(t)
