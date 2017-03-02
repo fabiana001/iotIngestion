@@ -3,6 +3,7 @@ package it.teamDigitale.kafkaProducers
 import java.io.Serializable
 import java.util.Properties
 
+import it.teamDigitale.avro.{ Example, ExampleAvroConverter }
 import it.teamDigitale.kafkaProducers.eventConverters.EventConverter
 import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerRecord }
 import org.slf4j.LoggerFactory
@@ -42,6 +43,12 @@ class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic
     producer.send(message)
     ()
   }
+
+//  def example() = {
+//    val avro = ExampleAvroConverter.convert(Example("ciao"))
+//    exec(avro)
+//    producer.flush()
+//  }
 
   def close(): Unit = producer.close()
 

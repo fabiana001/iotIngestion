@@ -16,7 +16,7 @@ object SimpleConsumer {
 
     var config = ConfigFactory.load()
     val serializer = config.getString("spark-opentsdb-exmaples.kafka.serializer")
-    val brokers = config.getString("spark-opentsdb-exmaples.kafka.brokers")
+    val brokers = config.getString("spark-opentsdb-exmaples.kafka.bootstrapServers")
     val topic = config.getString("spark-opentsdb-exmaples.kafka.topic")
     //val metric = config.getString("spark-opentsdb-exmaples.openTSDB.metric")
     val zookeepers = config.getString("spark-opentsdb-exmaples.zookeeper.host")

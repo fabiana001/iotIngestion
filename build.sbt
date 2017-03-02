@@ -1,5 +1,6 @@
 import de.heikoseeberger.sbtheader.license.Apache2_0
 import sbt._
+import sbtavrohugger._
 
 name := "iotIngestion"
 
@@ -13,7 +14,7 @@ scalaVersion in ThisBuild := "2.11.8"
 
 scalariformSettings
 
-scalastyleFailOnError := true
+scalastyleFailOnError := false
 
 scalacOptions ++= Seq(
   "-deprecation",
@@ -91,10 +92,11 @@ val hadoopHBaseExcludes =
 */
 def providedOrCompileDependencies(scope: String = "compile"): Seq[ModuleID] = Seq(
   //For spark Streaming Dependencies
-  hadoopHBaseExcludes("com.databricks" %% "spark-avro" % sparkAvroVersion % "compile"),
   hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion),
   hadoopHBaseExcludes("org.apache.spark" %% "spark-core" % sparkVersion % scope),
-  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming" % sparkVersion % scope))
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming" % sparkVersion % scope),
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-sql"% sparkVersion % scope)
+)
 
 val commonDependencies = Seq(
   //For Camel Dependencies
@@ -127,6 +129,7 @@ val commonDependencies = Seq(
   "org.apache.kafka" % "kafka-clients" % kafkaVersion % "compile",
   "org.apache.kafka" % "kafka-clients" % kafkaVersion % "test" classifier "test",
   "org.apache.commons" % "commons-io" % "1.3.2" % "test",
+  hadoopHBaseExcludes("com.databricks" %% "spark-avro" % sparkAvroVersion),
 
   //Test Dependencies
   "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
@@ -152,4 +155,7 @@ lazy val projectAssembly = (project in file("assembly")).
 
 scriptClasspath ++= Seq(s"$assemblyName-${version.value}.jar")
 
-    
+sbtavrohugger.SbtAvrohugger.avroSettings
+//(scalaSource in avroConfig) := new java.io.File("src/main/avro")
+
+(scalaSource in avroConfig) <<= sourceManaged { _ / "main" / "compiled_avro" }

@@ -52,7 +52,7 @@ class TorinoTrafficConverter extends EventConverter {
     val flow = (ftd_data \\ "speedflow" \ "@flow").text
     val speed = (ftd_data \\ "speedflow" \ "@speed").text
 
-    val attributes: Map[CharSequence, CharSequence] = Map(
+    val attributes: Map[String, String] = Map(
       att_lcd1 -> lcd1,
       att_road_LCD -> road_LCD,
       att_road_name -> road_name,
@@ -64,14 +64,14 @@ class TorinoTrafficConverter extends EventConverter {
       att_speed -> speed
     )
     new Event(
-      "TorinoFDT",
+      Some("TorinoFDT"),
       generationTimestamp,
       1,
-      url.hashCode.toString,
+      Some(url.hashCode.toString),
       latLon,
       url,
-      ByteBuffer.wrap(ftd_data.toString().getBytes()),
-      attributes.asJava
+      Some(ftd_data.toString().getBytes()),
+      attributes
     )
   }
 
@@ -79,16 +79,15 @@ class TorinoTrafficConverter extends EventConverter {
 
 object TorinoTrafficConverter {
 
-  val att_lcd1 = stringToCharSequence("FDT_data")
-  val att_road_LCD = stringToCharSequence("Road_LCD")
-  val att_road_name = stringToCharSequence("Road_name")
-  val att_offset = stringToCharSequence("offset")
-  val att_direction = stringToCharSequence("direction")
-  val att_accuracy = stringToCharSequence("accuracy")
-  val att_period = stringToCharSequence("period")
-  val att_flow = stringToCharSequence("flow")
-  val att_speed = stringToCharSequence("speed")
+  val att_lcd1 = "FDT_data"
+  val att_road_LCD = "Road_LCD"
+  val att_road_name = "Road_name"
+  val att_offset = "offset"
+  val att_direction = "direction"
+  val att_accuracy = "accuracy"
+  val att_period = "period"
+  val att_flow = "flow"
+  val att_speed = "speed"
 
-  def stringToCharSequence(x: String): CharSequence = x.asInstanceOf[CharSequence]
 }
 

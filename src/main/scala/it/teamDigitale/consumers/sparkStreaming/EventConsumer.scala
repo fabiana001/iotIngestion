@@ -1,20 +1,22 @@
 package it.teamDigitale.consumers.sparkStreaming
 
+import java.beans.Introspector
+
+import com.databricks.spark.avro._
+import com.databricks.spark.avro.SchemaConverters
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.avro.Event
-import kafka.serializer.DefaultDecoder
-import org.apache.kafka.common.serialization.ByteArrayDeserializer
-import org.apache.spark.SparkConf
-import org.apache.spark.streaming.{ Seconds, StreamingContext }
-import org.apache.spark.streaming.dstream.{ DStream, InputDStream }
+import org.apache.spark.rdd.RDD
+import org.apache.spark.sql.SparkSession
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka010.KafkaUtils
 import org.slf4j.LoggerFactory
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 
-import scala.collection.mutable
 import scala.util.Success
 
 /**
@@ -27,77 +29,57 @@ class EventConsumer(
 ) extends Serializable {
   val logger = LoggerFactory.getLogger(this.getClass)
 
-  def run(): DStream[Event] = {
+  def getEvents(): DStream[Event] = {
 
     logger.info("Consumer is running")
-    //assert(kafkaParams.contains("metadata.broker.list"))
 
-    //val inputStream: InputDStream[(Array[Byte], Array[Byte])] = //KafkaUtils.createDirectStream[Array[Byte], Array[Byte], DefaultDecoder, DefaultDecoder](ssc, kafkaParams, topicSet)
     val inputStream = KafkaUtils.createDirectStream(ssc, PreferConsistent, Subscribe[Array[Byte], Array[Byte]](topicSet, kafkaParams))
     inputStream.mapPartitions { rdd =>
       val specificAvroBinaryInjection: Injection[Event, Array[Byte]] = SpecificAvroCodecs.toBinary[Event]
       rdd.map { el =>
         val Success(event) = specificAvroBinaryInjection.invert(el.value())
+        println(event)
         event
       }
     }
   }
 
-}
+  def getAvro: DStream[Array[Byte]] = {
+    val inputStream = KafkaUtils.createDirectStream(ssc, PreferConsistent, Subscribe[Array[Byte], Array[Byte]](topicSet, kafkaParams))
+    inputStream.mapPartitions(rdd => rdd.map(_.value()))
+  }
 
-object EventConsumerMain {
-  val logger = LoggerFactory.getLogger(this.getClass)
+  def saveAsParquet(rdd: RDD[Event], spark: SparkSession, filename: String, attributes: List[String] = List()): Unit = {
+    //val sqlContext: SQLContext = spark.sqlContext
 
-  def main(args: Array[String]): Unit = {
 
-    val sparkConf = new SparkConf().
-      setAppName("spark-simpleEvent-test")
-    //set("spark.io.compression.codec", "lzf")
+    if (!rdd.isEmpty()) {
 
-    var config = ConfigFactory.load()
+      val props = Introspector.getBeanInfo(classOf[Event]).getPropertyDescriptors
+      props.foreach { prop =>
+        println(prop.getDisplayName())
+        println("\t" + prop.getReadMethod())
+        println("\t" + prop.getWriteMethod());
+      }
 
-    val test = args match {
-      case Array(testMode: String) =>
-        logger.info(s"kafka: ${config.getString("spark-opentsdb-exmaples.kafka.brokers")}")
-        logger.info(s"zookeeper: ${config.getString("spark-opentsdb-exmaples.zookeeper.host")}")
-        testMode.toBoolean
+    //  val df: DataFrame = spark.createDataFrame(rdd, classOf[Event])
+    //  val a: StructType = DataType.fromJson(Event.SCHEMA$.toString).asInstanceOf[StructType]
+      //val pippo = sqlContext.createDataFrame(rdd.toJavaRDD(), classOf[Event])
 
-      case _ => true
+      import spark.implicits._
+      val df = rdd.toDF()
+      df.write.partitionBy(attributes: _*).parquet(filename)
     }
 
-    if (test)
-      sparkConf.setMaster("local[*]")
+  }
 
-    implicit val ssc: StreamingContext = new StreamingContext(sparkConf, Seconds(5))
+  def saveAsAvro(rdd: RDD[Array[Byte]], spark: SparkSession, filename: String, attributes: List[String] = List()): Unit = {
+    val sqlContext = spark.sqlContext
+    val schema = SchemaConverters.toSqlType(Event.SCHEMA$)
+    val df = spark.createDataFrame(rdd.toJavaRDD(), classOf[Event]).toDF()
+    df.write.partitionBy(attributes: _*).avro(filename)
 
-    val topic = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.topic")
-    val brokers = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.brokers")
-    val servers = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.bootstrapServers")
-    val deserializer = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.deserializer")
-
-    val props: Map[String, Object] = Map(
-      // "metadata.broker.list" -> brokers,
-      "bootstrap.servers" -> servers,
-      "key.deserializer" -> classOf[ByteArrayDeserializer],
-      "value.deserializer" -> classOf[ByteArrayDeserializer],
-      //"auto.offset.reset" -> "earliest",
-      "enable.auto.commit" -> (false: java.lang.Boolean),
-      "group.id" -> "test_event_consumer"
-    )
-
-    val stream = new EventConsumer(ssc, Set(topic), props).run()
-
-    //    val stream = KafkaUtils.createDirectStream(ssc, PreferConsistent, Subscribe[Array[Byte], Array[Byte]](Set(topic), props))
-    //    val pippo = stream.map { record =>
-    //      record.value()
-    //    }
-    //    pippo.print(100)
-
-    stream.print(100)
-    //stream.foreachRDD(rdd => rdd.foreach(println(_)))
-
-    ssc.start()
-    ssc.awaitTermination()
   }
 
 }
+

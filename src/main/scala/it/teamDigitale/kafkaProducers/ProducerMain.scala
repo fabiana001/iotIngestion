@@ -23,14 +23,13 @@ object ProducerMain extends App {
 
   var config = ConfigFactory.load()
   val serializer = config.getString("spark-opentsdb-exmaples.kafka.serializer")
-  val brokers = config.getString("spark-opentsdb-exmaples.kafka.brokers")
+  val brokers = config.getString("spark-opentsdb-exmaples.kafka.bootstrapServers")
   val topic = config.getString("spark-opentsdb-exmaples.kafka.topic")
   //val metric = config.getString("spark-opentsdb-exmaples.openTSDB.metric")
   val zookeepers = config.getString("spark-opentsdb-exmaples.zookeeper.host")
 
   val props = new Properties()
 
-  //brokers are sequences of ip:port (e.g., "localhost:9092, 193.204.187.22:9092")
   props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, brokers)
   props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, serializer)
   props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializer)

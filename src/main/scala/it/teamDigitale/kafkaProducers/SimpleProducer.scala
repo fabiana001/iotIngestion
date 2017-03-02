@@ -15,7 +15,7 @@ object SimpleProducer extends App {
 
   var con = ConfigFactory.load()
   val topic = con.getString("spark-opentsdb-exmaples.kafka.topic")
-  val brokers = "127.0.0.1:9092"
+  val brokers = "193.204.187.132:9092"
 
   private val config: Map[String, Object] = Map[String, Object](
     ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> brokers,
