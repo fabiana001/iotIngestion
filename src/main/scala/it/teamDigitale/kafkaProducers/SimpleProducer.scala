@@ -9,13 +9,13 @@ import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerConfig, Produc
 import scala.collection.JavaConverters._
 import scala.util.Random
 /**
- * Created by fabiana on 27/02/17.
- */
+  * Created by fabiana on 27/02/17.
+  */
 object SimpleProducer extends App {
 
   var con = ConfigFactory.load()
-  val topic = con.getString("spark-opentsdb-exmaples.kafka.topic")
-  val brokers = "193.204.187.132:9092"
+  val topic = con.getString("spark-dataIngestion-example.kafka.topic")
+  val brokers = "127.0.0.1:9092"
 
   private val config: Map[String, Object] = Map[String, Object](
     ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> brokers,
