@@ -71,6 +71,7 @@ val apacheLog4jVersion = "2.7"
 val scalaTestVersion = "3.0.0"
 val sparkVersion = "2.1.0"
 val sparkAvroVersion = "3.2.0"
+val json4sVersion = "3.5.0"
 
 resolvers ++= Seq(
   Resolver.mavenLocal
@@ -84,6 +85,10 @@ val hadoopHBaseExcludes =
     excludeAll(ExclusionRule(organization = "org.mortbay.jetty")).
     excludeAll(ExclusionRule(organization = "org.eclipse.jetty")).
     excludeAll(ExclusionRule(organization = "javax.servlet"))
+
+val kafkaExcludes =
+  (moduleId: ModuleID) => moduleId.
+  excludeAll(ExclusionRule(organization = "org.json4s"))
 
 
 /**
@@ -125,15 +130,15 @@ val commonDependencies = Seq(
     exclude("com.sun.jdmk", "jmxtools")
     exclude("com.sun.jmx", "jmxri")
     exclude("javax.jms", "jms"),
-  "org.apache.kafka" %% "kafka" % kafkaVersion % "test" classifier "test",
-  "org.apache.kafka" % "kafka-clients" % kafkaVersion % "compile",
-  "org.apache.kafka" % "kafka-clients" % kafkaVersion % "test" classifier "test",
+  kafkaExcludes("org.apache.kafka" %% "kafka" % kafkaVersion % "test" classifier "test"),
+  kafkaExcludes("org.apache.kafka" % "kafka-clients" % kafkaVersion % "compile"),
+  kafkaExcludes("org.apache.kafka" % "kafka-clients" % kafkaVersion % "test" classifier "test"),
   "org.apache.commons" % "commons-io" % "1.3.2" % "test",
   hadoopHBaseExcludes("com.databricks" %% "spark-avro" % sparkAvroVersion),
 
   //Test Dependencies
-  "org.scalatest" %% "scalatest" % scalaTestVersion % "test"
-)
+  "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
+  "org.json4s" %% "json4s-native" % json4sVersion % "test")
 
 
 
