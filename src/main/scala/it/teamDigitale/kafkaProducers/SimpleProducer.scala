@@ -9,8 +9,8 @@ import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerConfig, Produc
 import scala.collection.JavaConverters._
 import scala.util.Random
 /**
-  * Created by fabiana on 27/02/17.
-  */
+ * Created by fabiana on 27/02/17.
+ */
 object SimpleProducer extends App {
 
   var con = ConfigFactory.load()

@@ -9,11 +9,11 @@ import com.twitter.bijection.avro.SpecificAvroCodecs
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.avro.Event
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{DataFrame, SparkSession}
-import org.apache.spark.streaming.{Seconds, StreamingContext}
+import org.apache.spark.sql.{ DataFrame, SparkSession }
+import org.apache.spark.streaming.{ Seconds, StreamingContext }
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka010.KafkaUtils
-import org.slf4j.{Logger, LoggerFactory}
+import org.slf4j.{ Logger, LoggerFactory }
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 
@@ -21,13 +21,13 @@ import scala.reflect.ClassTag
 import scala.util.Success
 
 /**
-  * Created with <3 by Team Digitale.
-  */
+ * Created with <3 by Team Digitale.
+ */
 class EventConsumer(
-                     @transient val ssc: StreamingContext,
-                     topicSet: Set[String],
-                     kafkaParams: Map[String, Object]
-                   ) extends Serializable {
+    @transient val ssc: StreamingContext,
+    topicSet: Set[String],
+    kafkaParams: Map[String, Object]
+) extends Serializable {
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   def getEvents: DStream[Event] = {

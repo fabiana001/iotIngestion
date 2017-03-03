@@ -53,7 +53,8 @@ object ConsumerMain {
       "value.deserializer" -> classOf[ByteArrayDeserializer],
       //"auto.offset.reset" -> "earliest",
       "enable.auto.commit" -> (false: java.lang.Boolean),
-      "group.id" -> "test_event_consumer")
+      "group.id" -> "test_event_consumer"
+    )
 
     val eventConsumer = new EventConsumer(ssc, Set(topic), props)
     val stream = eventConsumer.getEvents

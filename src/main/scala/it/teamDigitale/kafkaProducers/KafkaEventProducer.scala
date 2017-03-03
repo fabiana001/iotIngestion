@@ -11,10 +11,10 @@ import scala.reflect.{ ClassTag, classTag }
 import scala.util.{ Failure, Try }
 
 /**
-  * Created with <3 by Team Digitale
-  *
-  * It sends events to a kafka queue
-  */
+ * Created with <3 by Team Digitale
+ *
+ * It sends events to a kafka queue
+ */
 class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic: String) {
 
   val producer = new KafkaProducer[Array[Byte], Array[Byte]](props)

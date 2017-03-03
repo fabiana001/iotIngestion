@@ -10,9 +10,9 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.slf4j.LoggerFactory
 
 /**
-  * Created with <3 by Team Digitale.
-  * Example of a Kafka producer for Torino Iot
-  */
+ * Created with <3 by Team Digitale.
+ * Example of a Kafka producer for Torino Iot
+ */
 object ProducerMain extends App {
 
   //TODO we should add a redis db in the way to do not have redundant data if the service go down
