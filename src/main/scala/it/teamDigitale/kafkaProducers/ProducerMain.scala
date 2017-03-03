@@ -10,9 +10,9 @@ import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.slf4j.LoggerFactory
 
 /**
- * Created with <3 by Team Digitale
- * Example of a Kafka producer for Torino Iot
- */
+  * Created with <3 by Team Digitale.
+  * Example of a Kafka producer for Torino Iot
+  */
 object ProducerMain extends App {
 
   //TODO we should add a redis db in the way to do not have redundant data if the service go down
@@ -22,11 +22,9 @@ object ProducerMain extends App {
   var lastGeneratedTime: Option[Long] = None
 
   var config = ConfigFactory.load()
-  val serializer = config.getString("spark-opentsdb-exmaples.kafka.serializer")
-  val brokers = config.getString("spark-opentsdb-exmaples.kafka.bootstrapServers")
-  val topic = config.getString("spark-opentsdb-exmaples.kafka.topic")
-  //val metric = config.getString("spark-opentsdb-exmaples.openTSDB.metric")
-  val zookeepers = config.getString("spark-opentsdb-exmaples.zookeeper.host")
+  val serializer = config.getString("spark-dataIngestion-example.kafka.serializer")
+  val brokers = config.getString("spark-dataIngestion-example.kafka.bootstrapServers")
+  val topic = config.getString("spark-dataIngestion-example.kafka.topic")
 
   val props = new Properties()
 
@@ -45,12 +43,12 @@ object ProducerMain extends App {
   val ex = Executors.newScheduledThreadPool(1)
 
   val task = new Runnable {
-    def run() = {
+    def run(): Unit = {
       val time = lastGeneratedTime match {
         case None =>
           val time = kafkaEventClient.run(-1L)
-          logger.info(s"Data analyzed for the time ${time}")
-          println(s"Data analyzed for the time ${time}")
+          logger.info(s"Data analyzed for the time $time")
+          println(s"Data analyzed for the time $time")
           time
         case Some(t) =>
           kafkaEventClient.run(t)
