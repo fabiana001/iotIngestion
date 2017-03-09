@@ -3,11 +3,11 @@ package it.teamDigitale.kafkaProducers.eventConverters
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 
-import it.teamDigitale.avro.{ Event, EventAvroConverter }
+import it.teamDigitale.avro.{DataPoint, Event, EventAvroConverter}
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Seq
-import scala.xml.{ NodeSeq, XML }
+import scala.xml.{NodeSeq, XML}
 
 /**
  * Created with <3 by Team Digitale.
@@ -37,7 +37,7 @@ class TorinoTrafficConverter extends EventConverter {
     }
 
   }
-
+  @Deprecated
   private def convertEvent(ftd_data: NodeSeq, generationTimestamp: Long): Event = {
 
     val lcd1 = (ftd_data \ "@lcd1").text
@@ -77,6 +77,51 @@ class TorinoTrafficConverter extends EventConverter {
       attributes = attributes
     )
   }
+
+  private def convertDataPoint(ftd_data: NodeSeq, generationTimestamp: Long): DataPoint = {
+
+    val lcd1 = (ftd_data \ "@lcd1").text
+    val road_LCD = (ftd_data \ "@Road_LCD").text
+    val road_name = (ftd_data \ "@Road_name").text
+    val offset = (ftd_data \ "@offset").text
+    val lat = (ftd_data \ "@lat").text
+    val lon = (ftd_data \ "@lng").text
+    val latLon = s"$lat-$lon"
+    val direction = (ftd_data \ "@direction").text
+    val accuracy = (ftd_data \ "@accuracy").text
+    val period = (ftd_data \ "@period").text
+    val flow = (ftd_data \\ "speedflow" \ "@flow").text.toDouble
+    val speed = (ftd_data \\ "speedflow" \ "@speed").text.toDouble
+
+    val attributes: Map[String, String] = Map(
+      att_lcd1 -> lcd1,
+      att_road_LCD -> road_LCD,
+      att_road_name -> road_name,
+      att_offset -> offset,
+      att_direction -> direction,
+      att_accuracy -> accuracy,
+      att_period -> period
+    )
+
+    val values = Map(
+      att_flow -> flow,
+      att_speed -> speed
+    )
+
+    new DataPoint(
+      version = 0L,
+      id = Some("TorinoFDT"),
+      ts = generationTimestamp,
+      event_type_id = 1,
+      location = latLon,
+      host = host,
+      service = url,
+      body = Some(ftd_data.toString().getBytes()),
+      tags = attributes,
+      values = values
+    )
+  }
+
 
 }
 
