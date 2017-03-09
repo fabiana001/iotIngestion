@@ -16,6 +16,7 @@ class TorinoTrafficConverter extends EventConverter {
 
   import TorinoTrafficConverter._
   val url = "http://opendata.5t.torino.it/get_fdt"
+  val host = "http://opendata.5t.torino.it"
   def convert(time: Long): (Long, Option[Seq[Array[Byte]]]) = {
     val xml = XML.load(url)
     val traffic_data: NodeSeq = xml \\ "traffic_data"
@@ -64,14 +65,16 @@ class TorinoTrafficConverter extends EventConverter {
       att_speed -> speed
     )
     new Event(
-      Some("TorinoFDT"),
-      generationTimestamp,
-      1,
-      Some(url.hashCode.toString),
-      latLon,
-      url,
-      Some(ftd_data.toString().getBytes()),
-      attributes
+      version = 0L,
+      id = Some("TorinoFDT"),
+      ts = generationTimestamp,
+      event_type_id = 1,
+      source = Some(url.hashCode.toString),
+      location = latLon,
+      host = host,
+      service = url,
+      body = Some(ftd_data.toString().getBytes()),
+      attributes = attributes
     )
   }
 
