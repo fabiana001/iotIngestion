@@ -57,7 +57,7 @@ object ConsumerMain {
     )
 
     val eventConsumer = new EventConsumer(ssc, Set(topic), props)
-    val stream = eventConsumer.getEvents
+    val stream = eventConsumer.getStream
 
     stream.print(100)
     stream.foreachRDD(rdd => eventConsumer.saveAsParquet(rdd, spark.getOrCreate(), filename, List("ts")))

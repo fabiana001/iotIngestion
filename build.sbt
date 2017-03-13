@@ -1,6 +1,5 @@
-import de.heikoseeberger.sbtheader.license.Apache2_0
+
 import sbt._
-import sbtavrohugger._
 
 name := "iotIngestion"
 
@@ -101,6 +100,8 @@ def providedOrCompileDependencies(scope: String = "compile"): Seq[ModuleID] = Se
   hadoopHBaseExcludes("org.apache.spark" %% "spark-core" % sparkVersion % scope),
   hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming" % sparkVersion % scope),
   hadoopHBaseExcludes("org.apache.spark" %% "spark-sql"% sparkVersion % scope)
+  //"org.influxdb" % "influxdb-java" % "2.5"
+
 )
 
 val commonDependencies = Seq(
@@ -111,13 +112,14 @@ val commonDependencies = Seq(
   "org.apache.camel" % "camel-stream" % camelVersion % "compile",
   "org.scala-lang.modules" %% "scala-xml" % scalaxmlVersion % "compile",
   "org.apache.camel" % "camel-kafka" % camelVersion % "compile" exclude("org.apache.kafka", "kafka-clients"),
-
+  //typesafe dependencies
   "com.typesafe" % "config" % "1.0.2",
-
   //avro dependencies
   "org.apache.avro" % "avro" % "1.8.1",
   "com.twitter" %% "bijection-avro" % "0.9.2",
   "com.twitter" %% "bijection-core" % "0.9.2",
+  //influxdb dependencies
+  "org.influxdb" % "influxdb-java" % "2.5",
 
   //Logging Dependencies
  // "org.apache.logging.log4j" % "log4j-api" % apacheLog4jVersion % "compile",
@@ -159,8 +161,3 @@ lazy val projectAssembly = (project in file("assembly")).
   ) dependsOn root
 
 scriptClasspath ++= Seq(s"$assemblyName-${version.value}.jar")
-
-sbtavrohugger.SbtAvrohugger.avroSettings
-//(scalaSource in avroConfig) := new java.io.File("src/main/avro")
-
-(scalaSource in avroConfig) <<= sourceManaged { _ / "main" / "compiled_avro" }
