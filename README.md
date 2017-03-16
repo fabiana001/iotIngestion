@@ -26,21 +26,21 @@ A generic DataPoint is defined as follows:
 * Values (Map[String, Double]) - actual measured values (e.g. free_parking=134.0)
 
 ## Compile the code 
- ####1. Generate the DataPoint class
+ #### 1. Generate the DataPoint class
 To generate a java class from an avro file, download avrohugger-tools-{version}.jar from [here](http://central.maven.org/maven2/com/julianpeeters/avrohugger-tools_2.11/0.15.0/avrohugger-tools_2.11-0.15.0.jar) and exec:
 > java -jar avrohugger-tools_2.11-0.15.0-assembly.jar generate-specific datafile ./src/main/scala/it/teamDigitale/avro/DataPoint.avsc ./src/main/scala/
-####2. Create a jar file with external dependencies
+#### 2. Create a jar file with external dependencies
 > sbt clean compile package universal:package-bin
 
 ## Run the code
-####1. Run a kafka producer
+#### 1. Run a kafka producer
 [Here](https://github.com/fabiana001/iotIngestion/tree/master/src/main/scala/it/teamDigitale/kafkaProducers/main) we have implemented some example
 of a kafka producer which extract data from an rss feed.
 
 The following command generate a kafka producer which extracts data from [http://opendata.5t.torino.it/get_fdt](http://opendata.5t.torino.it/get_fdt):
 > java -Dconfig.file=./application.conf -cp "iotingestion_2.11-1.0.jar:./iotingestion-1.0/lib/*" it.teamDigitale.kafkaProducers.main.TorinoTrafficProducer
 
-####2. Run a kafka consumer
+#### 2. Run a kafka consumer
 [Here](https://github.com/fabiana001/iotIngestion/tree/master/src/main/scala/it/teamDigitale/consumers/sparkStreaming/main) we have implemented some kafka consumer 
 which stores data on HDFS and InfluxDB.
 
