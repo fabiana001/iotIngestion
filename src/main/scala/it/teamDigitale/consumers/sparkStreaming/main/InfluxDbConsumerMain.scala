@@ -1,15 +1,15 @@
 package it.teamDigitale.consumers.sparkStreaming.main
 
 import com.typesafe.config.ConfigFactory
-import it.teamDigitale.consumers.sparkStreaming.{EventConsumer, InfluxdbConsumer}
+import it.teamDigitale.consumers.sparkStreaming.{ EventConsumer, InfluxdbConsumer }
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming.{Minutes, Seconds, StreamingContext}
-import org.slf4j.{Logger, LoggerFactory}
+import org.apache.spark.streaming.{ Minutes, Seconds, StreamingContext }
+import org.slf4j.{ Logger, LoggerFactory }
 
 /**
-  * Created by fabiana on 13/03/17.
-  */
+ * Created by fabiana on 13/03/17.
+ */
 object InfluxDbConsumerMain {
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
@@ -43,9 +43,8 @@ object InfluxDbConsumerMain {
     val deserializer = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.deserializer")
     val influxUrl = config.getString("spark-dataIngestion-example.influx.uri")
     val influxUser = config.getString("spark-dataIngestion-example.influx.user")
-    val influxPassword= config.getString("spark-dataIngestion-example.influx.password")
-    val influxDbName= config.getString("spark-dataIngestion-example.influx.db_name")
-
+    val influxPassword = config.getString("spark-dataIngestion-example.influx.password")
+    val influxDbName = config.getString("spark-dataIngestion-example.influx.db_name")
 
     val props = Map(
       "bootstrap.servers" -> servers,
@@ -60,7 +59,7 @@ object InfluxDbConsumerMain {
     val stream = dpConsumer.getStream
 
     stream.print(100)
-    stream.foreachRDD{rdd => dpConsumer.write(rdd, influxDbName, influxUser, influxPassword, influxUrl)}
+    stream.foreachRDD { rdd => dpConsumer.write(rdd, influxDbName, influxUser, influxPassword, influxUrl) }
 
     ssc.start()
     ssc.awaitTermination()

@@ -13,7 +13,7 @@ import scala.reflect.ClassTag
  * Created with <3 by Team Digitale.
  */
 class EventConsumer(
-    ssc: StreamingContext,
-    topicSet: Set[String],
-    kafkaParams: Map[String, Object]
+  ssc: StreamingContext,
+  topicSet: Set[String],
+  kafkaParams: Map[String, Object]
 ) extends IoTConsumer[Event](ssc, topicSet, kafkaParams)

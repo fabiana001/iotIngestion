@@ -1,14 +1,14 @@
 package it.teamDigitale.kafkaProducers.eventConverters
 import java.text.SimpleDateFormat
 
-import it.teamDigitale.avro.{AvroConverter, DataPoint}
+import it.teamDigitale.avro.{ AvroConverter, DataPoint }
 
 import scala.collection.immutable.Seq
-import scala.xml.{NodeSeq, XML}
+import scala.xml.{ NodeSeq, XML }
 
 /**
-  * Created by fabiana on 14/03/17.
-  */
+ * Created by fabiana on 14/03/17.
+ */
 class TorinoParkingConverter extends EventConverter {
 
   import TorinoParkingConverter._
@@ -71,7 +71,6 @@ class TorinoParkingConverter extends EventConverter {
 
     point
   }
-
 
 }
 object TorinoParkingConverter {

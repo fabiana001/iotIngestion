@@ -48,7 +48,6 @@ abstract class IoTConsumer[T <: SpecificRecordBase: ClassTag](
     inputStream.mapPartitions(rdd => rdd.map(_.value()))
   }
 
-
   def saveAsAvro(rdd: RDD[Array[Byte]], spark: SparkSession, filename: String, attributes: List[String] = List()): Unit = {
     if (!rdd.isEmpty()) {
       import spark.implicits._
@@ -57,10 +56,10 @@ abstract class IoTConsumer[T <: SpecificRecordBase: ClassTag](
     }
   }
 
-  def saveAsParquet[Z <: Product:TypeTag](rdd: RDD[Z], spark: SparkSession, filename: String, attributes: List[String] = List()): Unit = {
-      if (!rdd.isEmpty()) {
+  def saveAsParquet[Z <: Product: TypeTag](rdd: RDD[Z], spark: SparkSession, filename: String, attributes: List[String] = List()): Unit = {
+    if (!rdd.isEmpty()) {
       import spark.implicits._
-      val df =  spark.createDataFrame(rdd)
+      val df = spark.createDataFrame(rdd)
       df.write.mode("append").partitionBy(attributes: _*).parquet(filename)
     }
 

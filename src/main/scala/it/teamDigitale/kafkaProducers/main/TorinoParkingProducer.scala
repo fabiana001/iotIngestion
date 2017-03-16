@@ -1,18 +1,18 @@
 package it.teamDigitale.kafkaProducers.main
 
 import java.util.Properties
-import java.util.concurrent.{Executors, TimeUnit}
+import java.util.concurrent.{ Executors, TimeUnit }
 
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.kafkaProducers.KafkaEventProducer
-import it.teamDigitale.kafkaProducers.eventConverters.{TorinoParkingConverter, TorinoTrafficConverter}
+import it.teamDigitale.kafkaProducers.eventConverters.{ TorinoParkingConverter, TorinoTrafficConverter }
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.slf4j.LoggerFactory
 
 /**
-  * Created by fabiana on 14/03/17.
-  */
-object TorinoParkingProducer extends App{
+ * Created by fabiana on 14/03/17.
+ */
+object TorinoParkingProducer extends App {
   //TODO we should add a redis db in the way to do not have redundant data if the service go down
 
   val logger = LoggerFactory.getLogger(this.getClass)

@@ -1,7 +1,7 @@
 package it.teamDigitale.kafkaProducers.main
 
 import java.util.Properties
-import java.util.concurrent.{Executors, TimeUnit}
+import java.util.concurrent.{ Executors, TimeUnit }
 
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.kafkaProducers.KafkaEventProducer
@@ -10,8 +10,8 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.slf4j.LoggerFactory
 
 /**
-  * Created by fabiana on 13/03/17.
-  */
+ * Created by fabiana on 13/03/17.
+ */
 object TorinoTrafficProducer extends App {
 
   //TODO we should add a redis db in the way to do not have redundant data if the service go down

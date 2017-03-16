@@ -4,8 +4,8 @@ import com.typesafe.config.ConfigFactory
 import it.teamDigitale.consumers.sparkStreaming.InfluxdbConsumer
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming.{Minutes, StreamingContext}
-import org.slf4j.{Logger, LoggerFactory}
+import org.apache.spark.streaming.{ Minutes, StreamingContext }
+import org.slf4j.{ Logger, LoggerFactory }
 
 /**
  * Created with <3 by Team Digitale.
