@@ -30,7 +30,15 @@ A generic DataPoint is defined as follows:
 To generate a java class from an avro file, download avrohugger-tools-{version}.jar from [here](http://central.maven.org/maven2/com/julianpeeters/avrohugger-tools_2.11/0.15.0/avrohugger-tools_2.11-0.15.0.jar) and exec:
 > java -jar avrohugger-tools_2.11-0.15.0-assembly.jar generate-specific datafile ./src/main/scala/it/teamDigitale/avro/DataPoint.avsc ./src/main/scala/
 #### 2. Create a jar file with external dependencies
+Run the following command:
+
 > sbt clean compile package universal:package-bin
+
+or the script [compile_code.sh](https://github.com/fabiana001/iotIngestion/blob/master/scripts/compile_code.sh):
+```bash
+cd ./scripts
+./compile_code.sh
+```
 
 ## Run the code
 #### 1. Run a kafka producer
