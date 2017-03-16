@@ -29,7 +29,6 @@ abstract class IoTConsumer[T <: SpecificRecordBase: ClassTag](
 
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
-  //def getStream[T <: org.apache.avro.specific.SpecificRecordBase: ClassTag]: DStream[T] = {
   def getStream: DStream[T] = {
     logger.info("Consumer is running")
 
@@ -62,7 +61,6 @@ abstract class IoTConsumer[T <: SpecificRecordBase: ClassTag](
       if (!rdd.isEmpty()) {
       import spark.implicits._
       val df =  spark.createDataFrame(rdd)
-      //val df: DataFrame = rdd.asInstanceOf[RDD[_ <: Product]].toDF()
       df.write.mode("append").partitionBy(attributes: _*).parquet(filename)
     }
 

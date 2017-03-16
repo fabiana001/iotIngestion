@@ -3,7 +3,7 @@ package it.teamDigitale.kafkaProducers.eventConverters
 import java.nio.ByteBuffer
 import java.text.SimpleDateFormat
 
-import it.teamDigitale.avro.{ DataPoint, Event, EventAvroConverter }
+import it.teamDigitale.avro.{ DataPoint, Event, AvroConverter }
 
 import scala.collection.JavaConverters._
 import scala.collection.immutable.Seq
@@ -27,9 +27,9 @@ class TorinoTrafficConverter extends EventConverter {
     if (generationTimestamp > time) {
       val tags = for {
         tag <- ftd_data
-      } yield convertEvent(tag, generationTimestamp)
+      } yield convertDataPoint(tag, generationTimestamp)
 
-      val avro = tags.map(x => EventAvroConverter.convert(x))
+      val avro = tags.map(x => AvroConverter.convertDataPoint(x))
       //avro.foreach(println(_))
       (generationTimestamp, Some(avro))
     } else {
@@ -93,7 +93,7 @@ class TorinoTrafficConverter extends EventConverter {
     val flow = (ftd_data \\ "speedflow" \ "@flow").text.toDouble
     val speed = (ftd_data \\ "speedflow" \ "@speed").text.toDouble
 
-    val attributes: Map[String, String] = Map(
+    val tags: Map[String, String] = Map(
       att_lcd1 -> lcd1,
       att_road_LCD -> road_LCD,
       att_road_name -> road_name,
@@ -110,14 +110,14 @@ class TorinoTrafficConverter extends EventConverter {
 
     new DataPoint(
       version = 0L,
-      id = Some("TorinoFDT"),
+      id = Some(measure),
       ts = generationTimestamp,
-      event_type_id = 1,
+      event_type_id = measure.hashCode,
       location = latLon,
       host = host,
       service = url,
       body = Some(ftd_data.toString().getBytes()),
-      tags = attributes,
+      tags = tags,
       values = values
     )
   }
@@ -135,6 +135,7 @@ object TorinoTrafficConverter {
   val att_period = "period"
   val att_flow = "flow"
   val att_speed = "speed"
+  val measure = "opendata.torino.get_fdt"
 
 }
 

@@ -150,7 +150,7 @@ object KafkaLocalMain {
     // echo isro  | nc <zookeeper ip> 2181
     val kfServer = new KafkaLocal(true)
     kfServer.start()
-    val topic = ConfigFactory.load().getString("spark-opentsdb-exmaples.kafka.topic")
+    val topic = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.topic")
     kfServer.createTopic(topic)
 
     //Thread.sleep(10000)

@@ -1,20 +1,16 @@
-package it.teamDigitale.consumers.sparkStreaming
+package it.teamDigitale.consumers.sparkStreaming.main
 
-import java.nio.ByteBuffer
-
-import collection.JavaConverters._
 import com.typesafe.config.ConfigFactory
-import it.teamDigitale.avro.Event
+import it.teamDigitale.consumers.sparkStreaming.InfluxdbConsumer
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.sql.types.{ DataType, StructType }
-import org.apache.spark.streaming.{ Minutes, Seconds, StreamingContext }
-import org.slf4j.{ Logger, LoggerFactory }
+import org.apache.spark.streaming.{Minutes, StreamingContext}
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
  * Created with <3 by Team Digitale.
  */
-object ConsumerMain {
+object HDFSConsumerMain {
 
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
@@ -53,14 +49,14 @@ object ConsumerMain {
       "value.deserializer" -> classOf[ByteArrayDeserializer],
       //"auto.offset.reset" -> "earliest",
       "enable.auto.commit" -> (false: java.lang.Boolean),
-      "group.id" -> "test_event_consumer"
+      "group.id" -> "hdfs_datapoint_consumer"
     )
 
-    val eventConsumer = new EventConsumer(ssc, Set(topic), props)
-    val stream = eventConsumer.getStream
+    val consumer = new InfluxdbConsumer(ssc, Set(topic), props)
+    val stream = consumer.getStream
 
     stream.print(100)
-    stream.foreachRDD(rdd => eventConsumer.saveAsParquet(rdd, spark.getOrCreate(), filename, List("ts")))
+    stream.foreachRDD(rdd => consumer.saveAsParquet(rdd, spark.getOrCreate(), filename, List("ts")))
 
     ssc.start()
     ssc.awaitTermination()

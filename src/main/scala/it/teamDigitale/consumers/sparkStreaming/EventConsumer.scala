@@ -17,4 +17,3 @@ class EventConsumer(
     topicSet: Set[String],
     kafkaParams: Map[String, Object]
 ) extends IoTConsumer[Event](ssc, topicSet, kafkaParams)
-//) extends IoTConsumer(ssc, topicSet, kafkaParams)

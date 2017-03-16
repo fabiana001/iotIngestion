@@ -31,8 +31,9 @@ class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic
       }
     }
 
-    if (avro.nonEmpty)
+    if (avro.nonEmpty) {
       producer.flush()
+    }
     newTime
   }
 

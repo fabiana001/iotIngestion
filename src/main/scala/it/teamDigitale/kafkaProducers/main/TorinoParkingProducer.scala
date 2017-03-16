@@ -1,20 +1,18 @@
-package it.teamDigitale.kafkaProducers
+package it.teamDigitale.kafkaProducers.main
 
 import java.util.Properties
-import java.util.concurrent.{ Executors, TimeUnit }
+import java.util.concurrent.{Executors, TimeUnit}
 
 import com.typesafe.config.ConfigFactory
-import it.teamDigitale.kafkaProducers.eventConverters.TorinoTrafficConverter
+import it.teamDigitale.kafkaProducers.KafkaEventProducer
+import it.teamDigitale.kafkaProducers.eventConverters.{TorinoParkingConverter, TorinoTrafficConverter}
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.slf4j.LoggerFactory
 
 /**
- * Created with <3 by Team Digitale.
- * Example of a Kafka producer for Torino Iot
- */
-object ProducerMain extends App {
-
+  * Created by fabiana on 14/03/17.
+  */
+object TorinoParkingProducer extends App{
   //TODO we should add a redis db in the way to do not have redundant data if the service go down
 
   val logger = LoggerFactory.getLogger(this.getClass)
@@ -37,8 +35,9 @@ object ProducerMain extends App {
   //props.put("auto.offset.reset", "earliest")
 
   logger.info(s"Kafka Bootstrap Servers $brokers, topic $topic")
+  println(s"Kafka Bootstrap Servers $brokers, topic $topic")
 
-  val kafkaEventClient = new KafkaEventProducer[TorinoTrafficConverter](props, topic)
+  val kafkaEventClient = new KafkaEventProducer[TorinoParkingConverter](props, topic)
 
   val ex = Executors.newScheduledThreadPool(1)
 
@@ -48,7 +47,6 @@ object ProducerMain extends App {
         case None =>
           val time = kafkaEventClient.run(-1L)
           logger.info(s"Data analyzed for the time $time")
-          println(s"Data analyzed for the time $time")
           time
         case Some(t) =>
           kafkaEventClient.run(t)
@@ -57,6 +55,6 @@ object ProducerMain extends App {
       lastGeneratedTime = Some(time)
     }
   }
-  ex.scheduleAtFixedRate(task, 2, 5, TimeUnit.SECONDS)
+  ex.scheduleAtFixedRate(task, 2, 6, TimeUnit.SECONDS)
 
 }

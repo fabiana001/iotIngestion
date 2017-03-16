@@ -24,7 +24,7 @@ class EventAvroConverterSpec extends FunSuite {
     implicit val formats = DefaultFormats
 
     val event = parse(data, true).extract[Event]
-    val avro = EventAvroConverter.convert(event)
+    val avro = AvroConverter.convertEvent(event)
 
     assert(event.id.getOrElse("") == "TorinoFDT")
     assert(avro.length > 0)
