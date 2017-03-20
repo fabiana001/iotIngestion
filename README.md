@@ -27,7 +27,7 @@ A generic DataPoint is defined as follows:
 
 ## Compile the code 
  #### 1. Generate the DataPoint class
-To generate a java class from an avro file, download avrohugger-tools-{version}.jar from [here](http://central.maven.org/maven2/com/julianpeeters/avrohugger-tools_2.11/0.15.0/avrohugger-tools_2.11-0.15.0.jar) and exec:
+To generate a java class from an avro file, download avrohugger-tools-{version}.jar from [here](https://search.maven.org/remotecontent?filepath=com/julianpeeters/avrohugger-tools_2.11/0.15.1/avrohugger-tools_2.11-0.15.1-assembly.jar) and exec:
 > java -jar avrohugger-tools_2.11-0.15.0-assembly.jar generate-specific datafile ./src/main/scala/it/teamDigitale/avro/DataPoint.avsc ./src/main/scala/
 #### 2. Create a jar file with external dependencies
 Run the following command:
