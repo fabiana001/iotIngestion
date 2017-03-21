@@ -1,10 +1,11 @@
 package it.teamDigitale.kafkaProducers.eventConverters
 import java.text.SimpleDateFormat
 
-import it.teamDigitale.avro.{ AvroConverter, DataPoint }
+import it.teamDigitale.avro.{AvroConverter, DataPoint}
 
 import scala.collection.immutable.Seq
-import scala.xml.{ NodeSeq, XML }
+import scala.util.Try
+import scala.xml.{NodeSeq, XML}
 
 /**
  * Created by fabiana on 14/03/17.
@@ -27,7 +28,7 @@ class TorinoParkingConverter extends EventConverter {
       } yield convertDataPoint(tag, generationTimestamp)
 
       val avro = tags.map(x => AvroConverter.convertDataPoint(x))
-      avro.foreach(println(_))
+      
       (generationTimestamp, Some(avro))
     } else {
       (time, None)
@@ -37,39 +38,47 @@ class TorinoParkingConverter extends EventConverter {
 
   private def convertDataPoint(ftd_data: NodeSeq, generationTimestamp: Long): DataPoint = {
 
-    val name = (ftd_data \ "@Name").text
-    val status = (ftd_data \ "@status").text
-    val free1 = (ftd_data \ "@Free").text
-    val free = free1.toDouble
-    val tendence = (ftd_data \ "@tendence").text
-    val lat = (ftd_data \ "@lat").text
-    val lon = (ftd_data \ "@lng").text
-    val latLon = s"$lat-$lon"
+    val freeParking = (ftd_data \ "@Free").text
+    val free = freeParking match {
+      case "" =>
+        0
+      case s =>
+        s.toDouble
+    }
 
-    val tags: Map[String, String] = Map(
-      att_name -> name,
-      att_status -> status,
-      att_tendence -> tendence
-    )
+      val name = (ftd_data \ "@Name").text
+      val status = (ftd_data \ "@status").text
+      val tendence = (ftd_data \ "@tendence").text
+      val lat = (ftd_data \ "@lat").text
+      val lon = (ftd_data \ "@lng").text
+      val latLon = s"$lat-$lon"
 
-    val values = Map(
-      att_free -> free
-    )
+      val tags: Map[String, String] = Map(
+        att_name -> name,
+        att_status -> status,
+        att_tendence -> tendence
+      )
 
-    val point = new DataPoint(
-      version = 0L,
-      id = Some(measure),
-      ts = generationTimestamp,
-      event_type_id = measure.hashCode,
-      location = latLon,
-      host = host,
-      service = url,
-      body = Some(ftd_data.toString().getBytes()),
-      tags = tags,
-      values = values
-    )
+      val values = Map(
+        att_free -> free
+      )
 
-    point
+      val point = new DataPoint(
+        version = 0L,
+        id = Some(measure),
+        ts = generationTimestamp,
+        event_type_id = measure.hashCode,
+        location = latLon,
+        host = host,
+        service = url,
+        body = Some(ftd_data.toString().getBytes()),
+        tags = tags,
+        values = values
+      )
+
+      point
+
+
   }
 
 }
