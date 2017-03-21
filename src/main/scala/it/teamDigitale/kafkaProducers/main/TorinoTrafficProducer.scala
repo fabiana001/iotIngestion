@@ -24,6 +24,7 @@ object TorinoTrafficProducer extends App {
   val serializer = config.getString("spark-dataIngestion-example.kafka.serializer")
   val brokers = config.getString("spark-dataIngestion-example.kafka.bootstrapServers")
   val topic = config.getString("spark-dataIngestion-example.kafka.topic")
+  val zookeepers = config.getString("spark-dataIngestion-example.kafka.zookeeperServers")
 
   val props = new Properties()
 
@@ -32,7 +33,7 @@ object TorinoTrafficProducer extends App {
   props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, serializer)
   //props.put("enable.auto.commit", "true")
   props.put("enable.zookeeper", "true")
-  //props.put("zookeeper.connect", zookeepers)
+  props.put("zookeeper.connect", zookeepers)
   //props.put("auto.offset.reset", "earliest")
 
   logger.info(s"Kafka Bootstrap Servers $brokers, topic $topic")
