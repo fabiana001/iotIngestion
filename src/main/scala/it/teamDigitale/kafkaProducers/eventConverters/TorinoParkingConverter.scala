@@ -46,11 +46,11 @@ class TorinoParkingConverter extends EventConverter {
         s.toDouble
     }
 
-      val name = (ftd_data \ "@Name").text
-      val status = (ftd_data \ "@status").text
-      val tendence = (ftd_data \ "@tendence").text
-      val lat = (ftd_data \ "@lat").text
-      val lon = (ftd_data \ "@lng").text
+      val name = getOrElse((ftd_data \ "@Name").text)
+      val status = getOrElse((ftd_data \ "@status").text)
+      val tendence = getOrElse((ftd_data \ "@tendence").text)
+      val lat = getOrElse((ftd_data \ "@lat").text)
+      val lon = getOrElse((ftd_data \ "@lng").text)
       val latLon = s"$lat-$lon"
 
       val tags: Map[String, String] = Map(
@@ -76,9 +76,16 @@ class TorinoParkingConverter extends EventConverter {
         values = values
       )
 
+    println(point)
       point
 
 
+  }
+
+  def getOrElse(s:String, default:String = "error"): String = {
+    if(s == "")
+      default
+    else s
   }
 
 }
