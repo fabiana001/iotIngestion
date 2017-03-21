@@ -58,6 +58,6 @@ object TorinoTrafficProducer extends App {
       lastGeneratedTime = Some(time)
     }
   }
-  ex.scheduleAtFixedRate(task, 2, 6, TimeUnit.SECONDS)
+  ex.scheduleAtFixedRate(task, 2, 2, TimeUnit.MINUTES)
 
 }

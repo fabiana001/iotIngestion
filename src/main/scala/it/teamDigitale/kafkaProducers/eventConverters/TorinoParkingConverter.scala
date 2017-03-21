@@ -28,7 +28,7 @@ class TorinoParkingConverter extends EventConverter {
       } yield convertDataPoint(tag, generationTimestamp)
 
       val avro = tags.map(x => AvroConverter.convertDataPoint(x))
-      
+
       (generationTimestamp, Some(avro))
     } else {
       (time, None)

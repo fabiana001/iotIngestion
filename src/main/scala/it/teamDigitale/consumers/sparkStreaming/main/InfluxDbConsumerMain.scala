@@ -36,8 +36,7 @@ object InfluxDbConsumerMain {
       .getOrCreate()
 
     val sparkConf = sparkSession.sparkContext
-    //implicit val ssc = new StreamingContext(sparkConf, Minutes(3))
-    implicit val ssc = new StreamingContext(sparkConf, Seconds(3))
+    implicit val ssc = new StreamingContext(sparkConf, Minutes(3))
     val topic = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.topic")
     val servers = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.bootstrapServers")
     val deserializer = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.deserializer")
