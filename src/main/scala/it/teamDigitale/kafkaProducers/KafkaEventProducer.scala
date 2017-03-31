@@ -21,9 +21,9 @@ class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic
   val logger: Logger = LoggerFactory.getLogger(this.getClass)
   val converter: T = classTag[T].runtimeClass.newInstance().asInstanceOf[T with Serializable]
 
-  def run(time: Long): Long = {
+  def run(timeMap: Map[String, Long] = Map.empty): Map[String, Long] = {
 
-    val (newTime, avro) = converter.convert(time)
+    val (newTimeMap, avro) = converter.convert(timeMap)
     avro.getOrElse(Seq.empty[Array[Byte]]).foreach { data =>
       exec(data) match {
         case Failure(ex) => logger.error(s"${ex.getStackTrace}")
@@ -34,7 +34,7 @@ class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic
     if (avro.nonEmpty) {
       producer.flush()
     }
-    newTime
+    newTimeMap
   }
 
   def exec(bytes: Array[Byte]): Try[Unit] = Try {

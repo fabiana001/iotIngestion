@@ -15,9 +15,9 @@ import scala.xml.{ NodeSeq, XML }
 class TorinoTrafficConverter extends EventConverter {
 
   import TorinoTrafficConverter._
-  val url = "http://opendata.5t.torino.it/get_fdt"
-  val host = "http://opendata.5t.torino.it"
-  def convert(time: Long): (Long, Option[Seq[Array[Byte]]]) = {
+
+  def convert(timeMap: Map[String, Long] = Map()): (Map[String, Long], Option[Seq[Array[Byte]]]) = {
+    val time = timeMap.getOrElse(url, -1L)
     val xml = XML.load(url)
     val traffic_data: NodeSeq = xml \\ "traffic_data"
     val ftd_data = traffic_data \\ "FDT_data"
@@ -31,9 +31,10 @@ class TorinoTrafficConverter extends EventConverter {
 
       val avro = tags.map(x => AvroConverter.convertDataPoint(x))
       //avro.foreach(println(_))
-      (generationTimestamp, Some(avro))
+      val newTimeMap = Map(url -> generationTimestamp)
+      (newTimeMap, Some(avro))
     } else {
-      (time, None)
+      (timeMap, None)
     }
 
   }
@@ -136,6 +137,8 @@ object TorinoTrafficConverter {
   val att_flow = "flow"
   val att_speed = "speed"
   val measure = "opendata.torino.get_fdt"
+  val url = "http://opendata.5t.torino.it/get_fdt"
+  val host = "http://opendata.5t.torino.it"
 
 }
 
