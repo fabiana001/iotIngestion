@@ -97,19 +97,13 @@ val kafkaExcludes =
 def providedOrCompileDependencies(scope: String = "compile"): Seq[ModuleID] = Seq(
   //For spark Streaming Dependencies
   hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion),
-  hadoopHBaseExcludes("org.apache.spark" %% "spark-core" % sparkVersion % scope),
+  "org.apache.spark" %% "spark-core" % sparkVersion % scope,
   hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming" % sparkVersion % scope),
   hadoopHBaseExcludes("org.apache.spark" %% "spark-sql"% sparkVersion % scope)
-  //"org.influxdb" % "influxdb-java" % "2.5"
 
 )
 
 val commonDependencies = Seq(
-  //For Camel Dependencies
-  "org.apache.camel" % "camel-core" % camelVersion % "compile",
-  "org.apache.camel" % "camel-scala" % camelVersion % "compile",
-  "org.apache.camel" % "camel-http4" % camelVersion % "compile",
-  "org.apache.camel" % "camel-stream" % camelVersion % "compile",
   "org.scala-lang.modules" %% "scala-xml" % scalaxmlVersion % "compile",
   "org.apache.camel" % "camel-kafka" % camelVersion % "compile" exclude("org.apache.kafka", "kafka-clients"),
   //typesafe dependencies
@@ -120,6 +114,8 @@ val commonDependencies = Seq(
   "com.twitter" %% "bijection-core" % "0.9.2",
   //influxdb dependencies
   "org.influxdb" % "influxdb-java" % "2.5",
+  "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.7",
+  "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.7",
 
   //Logging Dependencies
  // "org.apache.logging.log4j" % "log4j-api" % apacheLog4jVersion % "compile",

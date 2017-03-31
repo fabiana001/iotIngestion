@@ -110,7 +110,7 @@ class TorinoTrafficConverter extends EventConverter {
 
     new DataPoint(
       version = 0L,
-      id = Some(measure),
+      id = Some(measure), //here we should put something as "traffic"
       ts = generationTimestamp,
       event_type_id = measure.hashCode,
       location = latLon,

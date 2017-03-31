@@ -4,7 +4,7 @@ import com.typesafe.config.ConfigFactory
 import it.teamDigitale.consumers.sparkStreaming.InfluxdbConsumer
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming.{ Minutes, StreamingContext }
+import org.apache.spark.streaming.{ Minutes, Seconds, StreamingContext }
 import org.slf4j.{ Logger, LoggerFactory }
 
 /**
@@ -56,7 +56,7 @@ object HDFSConsumerMain {
     val stream = consumer.getStream
 
     stream.print(100)
-    stream.foreachRDD(rdd => consumer.saveAsParquet(rdd, spark.getOrCreate(), filename, List("ts")))
+    stream.foreachRDD(rdd => consumer.saveAsParquet(rdd, spark.getOrCreate(), filename, List("ts", "host")))
 
     ssc.start()
     ssc.awaitTermination()
