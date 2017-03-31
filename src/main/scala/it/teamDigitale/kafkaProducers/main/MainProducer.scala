@@ -56,7 +56,7 @@ object MainProducer {
 
       case _ =>
         Console.err.println(s"wrong parameters for: ${args.mkString(" ")}")
-        val string = """to run the jar do: java -cp webgraphgenerator.jar it.teamDigitale.kafkaProducers.main.MainProducer <producerType> <period>
+        val string = """to run the jar do: java -Dconfig.file=./application.conf -cp "./iotingestion-1.0/iotingestion_2.11-1.0.jar:./iotingestion-1.0/lib/*" it.teamDigitale.kafkaProducers.main.MainProducer <producerType> <period>
                        | where:
                        | <producerType> : should be TorinoTraffic, FirenzeTraffic or TorinoParking
                        | <period> : period in seconds between two successive executions
