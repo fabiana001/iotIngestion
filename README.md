@@ -64,3 +64,17 @@ From [Docker](https://docs.influxdata.com/influxdb/v1.2/)
 
 > $ docker run -d --volume=/var/influxdb:/data -p 8083:8083 -p 8086:8086  influxdb
  -->
+ 
+ ## Grafana dashbBoard Examples
+ 
+ ### Analysis of the vehicular flow for Firenze
+ 
+In the following, the vehicular flow of Firenze is analyzed for each available sensor. Data are extracted from [Firenze open data website](http://opendata.comune.fi.it/mobilita_sicurezza/dataset_0371.html)
+ ![Image of Firenze](https://github.com/fabiana001/iotIngestion/blob/master/imgs/dashboardFirenze.png)
+ 
+ ### Analysis of average speed for Torino
+ In the following, the average speed of Torino is analyzed for each available sensor and grouped by streets. Data are extracted from [Torino web service](http://opendata.5t.torino.it/get_pk)
+ ![Image of Firenze](https://github.com/fabiana001/iotIngestion/blob/master/imgs/dashboardTorino.png)
+ 
+ 
+ 
