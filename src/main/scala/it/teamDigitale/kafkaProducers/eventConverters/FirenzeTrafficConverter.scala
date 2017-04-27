@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import it.teamDigitale.JsonConverter
 import it.teamDigitale.avro.{AvroConverter, DataPoint}
 import org.apache.logging.log4j.scala.Logging
 import org.slf4j.{Logger, LoggerFactory}
@@ -81,7 +82,7 @@ class FirenzeTrafficConverter extends EventConverter with Logging {
 
   def extractDataPoints(sensor: FirenzeSensor, corpus: BufferedSource, lastExtractedTime: Long): List[DataPoint] = {
 
-    val data = fromJson[SensorFormat](corpus.mkString)
+    val data = JsonConverter.fromJson[SensorFormat](corpus.mkString)
     if (data.rows.isEmpty)
       logger.debug(s"No datapoints extracted for the sensor ${sensor.url}")
     val locString = s"${sensor.lat}-${sensor.lon}"
@@ -105,7 +106,7 @@ class FirenzeTrafficConverter extends EventConverter with Logging {
             location = locString,
             host = host,
             service = sensor.url,
-            body = Some(toJson(rowData).getBytes()),
+            body = Some(JsonConverter.toJson(rowData).getBytes()),
             tags = Map("name" -> sensor.name),
             values = Map("flow" -> value.toDouble)
           )
@@ -113,19 +114,6 @@ class FirenzeTrafficConverter extends EventConverter with Logging {
 
   }
 
-  private def fromJson[T](json: String)(implicit m: Manifest[T]): T = {
-    val mapper = new ObjectMapper() with ScalaObjectMapper
-    mapper.registerModule(DefaultScalaModule)
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    mapper.readValue[T](json)
-  }
-
-  private def toJson(value: Data): String = {
-    val mapper = new ObjectMapper() with ScalaObjectMapper
-    mapper.registerModule(DefaultScalaModule)
-    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    mapper.writeValueAsString(value)
-  }
 
   private def getTime(row: Data): Long = {
     val year = row.key.apply(2).toInt

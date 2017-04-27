@@ -94,6 +94,6 @@ object MainProducer extends Logging {
 
 object Producer extends Enumeration {
   type Producer = Value
-  val TorinoTraffic, FirenzeTraffic, TorinoParking = Value
+  val TorinoTraffic, FirenzeTraffic, TorinoParking, InfoBluEvent, InfoBluTraffic = Value
 }
 

@@ -132,7 +132,7 @@ val commonDependencies = Seq(
   kafkaExcludes("org.apache.kafka" % "kafka-clients" % kafkaVersion % "test" classifier "test"),
   "org.apache.commons" % "commons-io" % "1.3.2" % "test",
   hadoopHBaseExcludes("com.databricks" %% "spark-avro" % sparkAvroVersion),
-
+  "org.mapdb" % "mapdb" % "3.0.3",
   //Test Dependencies
   "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
   "org.json4s" %% "json4s-native" % json4sVersion % "test")
