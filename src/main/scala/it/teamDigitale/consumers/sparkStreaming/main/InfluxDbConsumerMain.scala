@@ -15,7 +15,7 @@ object InfluxDbConsumerMain {
 
   def main(args: Array[String]): Unit = {
 
-    val spark = SparkSession.builder.appName("spark-simpleEvent-test")
+    val spark = SparkSession.builder.appName("spark-influx-test")
 
     var config = ConfigFactory.load()
 

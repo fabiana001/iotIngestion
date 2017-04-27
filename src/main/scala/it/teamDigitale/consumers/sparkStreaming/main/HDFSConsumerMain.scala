@@ -18,7 +18,7 @@ object HDFSConsumerMain extends Logging {
 
   def main(args: Array[String]): Unit = {
     val tryMain = Try {
-      val spark = SparkSession.builder.appName("spark-simpleEvent-test")
+      val spark = SparkSession.builder.appName("spark-hdfs-test")
 
       var config = ConfigFactory.load()
 
