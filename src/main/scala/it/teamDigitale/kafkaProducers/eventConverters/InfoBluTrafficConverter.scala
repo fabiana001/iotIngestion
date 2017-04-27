@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat
 
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.avro.{AvroConverter, DataPoint}
+import it.teamDigitale.util.InfoBluDecoder
 
 import scala.xml.{NodeSeq, XML}
 
