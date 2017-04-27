@@ -39,7 +39,7 @@ object HDFSConsumerMain extends Logging {
         .getOrCreate()
 
       val sparkConf = sparkSession.sparkContext
-      implicit val ssc = new StreamingContext(sparkConf, Seconds(30))
+      implicit val ssc = new StreamingContext(sparkConf, Minutes(3))
 
       val topic = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.topic")
       val servers = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.bootstrapServers")
@@ -69,7 +69,7 @@ object HDFSConsumerMain extends Logging {
         logger.error(ex.getMessage)
         val stackTrace = ex.getStackTrace.mkString("\n \t")
         logger.error(stackTrace)
-      case Success(_) => 
+      case Success(_) =>
     }
   }
 
