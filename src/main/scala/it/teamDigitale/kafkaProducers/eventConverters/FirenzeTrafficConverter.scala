@@ -2,24 +2,25 @@ package it.teamDigitale.kafkaProducers.eventConverters
 
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
-import com.fasterxml.jackson.databind.{ DeserializationFeature, ObjectMapper }
+
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
-import it.teamDigitale.avro.{ AvroConverter, DataPoint }
-import org.slf4j.{ Logger, LoggerFactory }
-import scala.concurrent.{ Await, Future }
+import it.teamDigitale.avro.{AvroConverter, DataPoint}
+import org.apache.logging.log4j.scala.Logging
+import org.slf4j.{Logger, LoggerFactory}
+
+import scala.concurrent.{Await, Future}
 import scala.io.BufferedSource
-import scala.util.{ Failure, Success, Try }
+import scala.util.{Failure, Success, Try}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 
 /**
  * Created by fabiana on 27/03/17.
  */
-class FirenzeTrafficConverter extends EventConverter {
+class FirenzeTrafficConverter extends EventConverter with Logging {
   import FirenzeTrafficConverter._
-
-  val logger: Logger = LoggerFactory.getLogger(this.getClass)
 
   override def convert(lastExtractedData: Map[String, Long] = Map()): (Map[String, Long], Option[Seq[Array[Byte]]]) = {
 
@@ -82,7 +83,7 @@ class FirenzeTrafficConverter extends EventConverter {
 
     val data = fromJson[SensorFormat](corpus.mkString)
     if (data.rows.isEmpty)
-      logger.error(s"No datapoints extracted for the sensor ${sensor.url}")
+      logger.debug(s"No datapoints extracted for the sensor ${sensor.url}")
     val locString = s"${sensor.lat}-${sensor.lon}"
 
     data.rows

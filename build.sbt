@@ -66,7 +66,7 @@ scalacOptions ++= Seq(
 val kafkaVersion = "0.10.1.1"
 val camelVersion = "2.18.1"
 val scalaxmlVersion = "1.0.6"
-val apacheLog4jVersion = "2.7"
+//val apacheLog4jVersion = "2.7"
 val scalaTestVersion = "3.0.0"
 val sparkVersion = "2.1.0"
 val sparkAvroVersion = "3.2.0"
@@ -96,10 +96,10 @@ val kafkaExcludes =
 */
 def providedOrCompileDependencies(scope: String = "compile"): Seq[ModuleID] = Seq(
   //For spark Streaming Dependencies
-  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion),
-  "org.apache.spark" %% "spark-core" % sparkVersion % scope,
-  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming" % sparkVersion % scope),
-  hadoopHBaseExcludes("org.apache.spark" %% "spark-sql"% sparkVersion % scope)
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming-kafka-0-10" % sparkVersion).exclude("org.scalatest", "scalatest_2.11"),
+  "org.apache.spark" %% "spark-core" % sparkVersion % scope exclude("org.scalatest", "scalatest_2.11"),
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-streaming" % sparkVersion % scope).exclude("org.scalatest", "scalatest_2.11"),
+  hadoopHBaseExcludes("org.apache.spark" %% "spark-sql"% sparkVersion % scope).exclude("org.scalatest", "scalatest_2.11")
 
 )
 
@@ -116,11 +116,10 @@ val commonDependencies = Seq(
   "org.influxdb" % "influxdb-java" % "2.5",
   "com.fasterxml.jackson.core" % "jackson-databind" % "2.8.7",
   "com.fasterxml.jackson.module" %% "jackson-module-scala" % "2.8.7",
-
   //Logging Dependencies
- // "org.apache.logging.log4j" % "log4j-api" % apacheLog4jVersion % "compile",
- // "org.apache.logging.log4j" % "log4j-core" % apacheLog4jVersion % "compile",
- // "org.apache.logging.log4j" % "log4j-slf4j-impl" % apacheLog4jVersion % "compile",
+  "org.apache.logging.log4j" % "log4j-api" % "2.8.2",
+  "org.apache.logging.log4j" % "log4j-core" % "2.8.2",
+  "org.apache.logging.log4j" %% "log4j-api-scala" % "2.8.2",
   //Kafka Dependencies
   "org.apache.kafka" %% "kafka" % kafkaVersion % "compile"
     exclude("org.apache.logging.log4j", "log4j-slf4j-impl")
@@ -137,6 +136,10 @@ val commonDependencies = Seq(
   //Test Dependencies
   "org.scalatest" %% "scalatest" % scalaTestVersion % "test",
   "org.json4s" %% "json4s-native" % json4sVersion % "test")
+  .map(x => x.exclude("org.scalactic", "scalactic"))
+  .map(x => x.exclude("org.slf4j","slf4j-log4j12"))
+  .map(x => x.exclude("log4j", "log4j"))
+
 
 
 

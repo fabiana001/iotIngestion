@@ -1,21 +1,21 @@
 package it.teamDigitale.kafkaProducers.main
 
 import java.util.Properties
-import java.util.concurrent.{ Executors, ScheduledFuture, TimeUnit }
+import java.util.concurrent.{Executors, ScheduledFuture, TimeUnit}
 
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.kafkaProducers.KafkaEventProducer
-import it.teamDigitale.kafkaProducers.eventConverters.{ EventConverter, FirenzeTrafficConverter, TorinoParkingConverter, TorinoTrafficConverter }
+import it.teamDigitale.kafkaProducers.eventConverters.{EventConverter, FirenzeTrafficConverter, TorinoParkingConverter, TorinoTrafficConverter}
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.logging.log4j.scala.Logging
 import org.slf4j.LoggerFactory
 
-import scala.reflect.{ ClassTag, classTag }
+import scala.reflect.{ClassTag, classTag}
 
 /**
  * Created by fabiana on 30/03/17.
  */
-object MainProducer {
-  val logger = LoggerFactory.getLogger(this.getClass)
+object MainProducer extends Logging {
 
   var config = ConfigFactory.load()
   val serializer = config.getString("spark-dataIngestion-example.kafka.serializer")
@@ -40,6 +40,8 @@ object MainProducer {
 
   def main(args: Array[String]): Unit = {
 
+
+
     args match {
 
       case Array(producerType: String, period: String) =>
@@ -55,6 +57,7 @@ object MainProducer {
         logger.debug(s"Execution at $timeStamp isFinished: ${thread.isDone}")
 
       case _ =>
+        logger.error("provaaaa")
         Console.err.println(s"wrong parameters for: ${args.mkString(" ")}")
 
         val string = """to run the jar do: java -Dconfig.file=./application.conf -cp "./iotingestion-1.0/iotingestion_2.11-1.0.jar:./iotingestion-1.0/lib/*" it.teamDigitale.kafkaProducers.main.MainProducer <producerType> <period>
@@ -62,8 +65,8 @@ object MainProducer {
                        | <producerType> : should be TorinoTraffic, FirenzeTraffic or TorinoParking
                        | <period> : period in seconds between two successive executions
                      """
-
         Console.err.println(string)
+
 
     }
 

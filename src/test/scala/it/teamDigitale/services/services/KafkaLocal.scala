@@ -22,21 +22,21 @@ import java.util.Properties
 
 import com.typesafe.config.ConfigFactory
 import kafka.admin.AdminUtils
-import kafka.server.{ KafkaConfig, KafkaServer }
+import kafka.server.{KafkaConfig, KafkaServer}
 import org.apache.commons.io.FileUtils
+import org.apache.logging.log4j.scala.Logging
 import org.apache.zookeeper.server._
-import org.slf4j.LoggerFactory
+import org.slf4j.{Logger, LoggerFactory}
 
 /**
  * Created with <3 by Team Digitale.
  *
  * Run an local instance of zookeeper (localhost:2181) and kafka(localhost:9292)
  */
-class KafkaLocal(var runZookeeper: Boolean = true) {
+class KafkaLocal(var runZookeeper: Boolean = true) extends Logging{
 
   var zkServer: Option[ServerCnxnFactory] = None
   var kafkaServer: Option[KafkaServer] = None
-  val logger = LoggerFactory.getLogger(this.getClass)
 
   private def startZK(): Unit = {
     if (zkServer.isEmpty) {
@@ -145,6 +145,7 @@ class KafkaLocal(var runZookeeper: Boolean = true) {
 object KafkaLocalMain {
   def main(args: Array[String]): Unit = {
 
+    val logger: Logger = LoggerFactory.getLogger(this.getClass)
     //echo stat | nc <zookeeper ip> 2181
     //echo mntr | nc <zookeeper ip> 2181
     // echo isro  | nc <zookeeper ip> 2181
@@ -152,6 +153,7 @@ object KafkaLocalMain {
     kfServer.start()
     val topic = ConfigFactory.load().getString("spark-dataIngestion-example.kafka.topic")
     kfServer.createTopic(topic)
+
 
     //Thread.sleep(10000)
     //kfServer.stop()

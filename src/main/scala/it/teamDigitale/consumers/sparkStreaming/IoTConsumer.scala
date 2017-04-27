@@ -5,15 +5,17 @@ import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
 import org.apache.spark.streaming.kafka010.KafkaUtils
 import org.apache.spark.streaming.kafka010.LocationStrategies.PreferConsistent
-import org.slf4j.{ Logger, LoggerFactory }
+import org.slf4j.{Logger, LoggerFactory}
 import com.databricks.spark.avro._
 import com.databricks.spark.avro.SchemaConverters
 import com.twitter.bijection.Injection
 import com.twitter.bijection.avro.SpecificAvroCodecs
 import org.apache.avro.generic.GenericRecord
 import org.apache.avro.specific.SpecificRecordBase
+import org.apache.logging.log4j.scala.Logging
 import org.apache.spark.rdd.RDD
-import org.apache.spark.sql.{ DataFrame, SparkSession }
+import org.apache.spark.sql.{DataFrame, SparkSession}
+
 import scala.reflect.runtime.universe._
 import scala.reflect.ClassTag
 import scala.util.Success
@@ -25,9 +27,7 @@ abstract class IoTConsumer[T <: SpecificRecordBase: ClassTag](
     @transient val ssc: StreamingContext,
     topicSet: Set[String],
     kafkaParams: Map[String, Object]
-) extends Serializable {
-
-  val logger: Logger = LoggerFactory.getLogger(this.getClass)
+) extends Serializable with Logging{
 
   def getStream: DStream[T] = {
     logger.info("Consumer is running")
