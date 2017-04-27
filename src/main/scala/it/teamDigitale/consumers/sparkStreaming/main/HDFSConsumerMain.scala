@@ -5,10 +5,9 @@ import it.teamDigitale.consumers.sparkStreaming.InfluxdbConsumer
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.logging.log4j.scala.Logging
 import org.apache.spark.sql.SparkSession
-import org.apache.spark.streaming.{Minutes, Seconds, StreamingContext}
+import org.apache.spark.streaming.{ Minutes, Seconds, StreamingContext }
 
-import scala.util.{Failure, Success, Try}
-
+import scala.util.{ Failure, Success, Try }
 
 /**
  * Created with <3 by Team Digitale.
@@ -66,13 +65,12 @@ object HDFSConsumerMain extends Logging {
     }
 
     tryMain match {
-      case Failure(ex) => logger.error(ex.getMessage)
+      case Failure(ex) =>
+        logger.error(ex.getMessage)
         val stackTrace = ex.getStackTrace.mkString("\n \t")
         logger.error(stackTrace)
-      case Success(_)  => logger.info("tutt'appost")
+      case Success(_) => 
     }
   }
-
-
 
 }

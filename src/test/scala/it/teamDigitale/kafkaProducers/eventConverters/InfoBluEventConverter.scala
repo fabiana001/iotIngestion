@@ -1,6 +1,6 @@
 package it.teamDigitale.kafkaProducers.eventConverters
 
-import java.net.{HttpURLConnection, URL}
+import java.net.{ HttpURLConnection, URL }
 import java.nio.charset.CodingErrorAction
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
@@ -8,14 +8,14 @@ import java.util.zip.GZIPInputStream
 
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.JsonConverter
-import it.teamDigitale.avro.{AvroConverter, DataPoint}
-import org.slf4j.{Logger, LoggerFactory}
+import it.teamDigitale.avro.{ AvroConverter, DataPoint }
+import org.slf4j.{ Logger, LoggerFactory }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 import scala.io.Codec
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 /**
  * Created by fabiana on 10/04/17.

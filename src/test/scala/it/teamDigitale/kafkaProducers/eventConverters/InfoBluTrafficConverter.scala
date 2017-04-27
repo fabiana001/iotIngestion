@@ -3,15 +3,15 @@ package it.teamDigitale.kafkaProducers.eventConverters
 import java.text.SimpleDateFormat
 
 import com.typesafe.config.ConfigFactory
-import it.teamDigitale.avro.{AvroConverter, DataPoint}
+import it.teamDigitale.avro.{ AvroConverter, DataPoint }
 import it.teamDigitale.util.InfoBluDecoder
 
-import scala.xml.{NodeSeq, XML}
+import scala.xml.{ NodeSeq, XML }
 
 /**
-  * Created by fabiana on 20/04/17.
-  */
-class InfoBluTrafficConverter extends EventConverter{
+ * Created by fabiana on 20/04/17.
+ */
+class InfoBluTrafficConverter extends EventConverter {
   import InfoBluTrafficConverter._
 
   val (srcMap, dstMap) = InfoBluDecoder.run()
@@ -36,16 +36,16 @@ class InfoBluTrafficConverter extends EventConverter{
       (time, None)
     }
 
-
   }
 
   private def convertDataPoint(n: NodeSeq, generationTimestamp: Long): DataPoint = {
-    val source =  (n \ sourceCode).text
+    val source = (n \ sourceCode).text
     val end = (n \ endCode).text
     val offs = (n \ offset).text
     val speed = (n \ velocity).text
 
-    val tags = Map("sourceCode" -> source,
+    val tags = Map(
+      "sourceCode" -> source,
       "endCode" -> end,
       "offset" -> offs,
       "srcCoordinates" -> srcMap.getOrDefault(source, "-1"),

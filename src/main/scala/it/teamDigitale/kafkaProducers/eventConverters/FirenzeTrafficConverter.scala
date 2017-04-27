@@ -3,17 +3,17 @@ package it.teamDigitale.kafkaProducers.eventConverters
 import java.text.SimpleDateFormat
 import java.util.concurrent.TimeUnit
 
-import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
+import com.fasterxml.jackson.databind.{ DeserializationFeature, ObjectMapper }
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import it.teamDigitale.JsonConverter
-import it.teamDigitale.avro.{AvroConverter, DataPoint}
+import it.teamDigitale.avro.{ AvroConverter, DataPoint }
 import org.apache.logging.log4j.scala.Logging
-import org.slf4j.{Logger, LoggerFactory}
+import org.slf4j.{ Logger, LoggerFactory }
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.{ Await, Future }
 import scala.io.BufferedSource
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration.FiniteDuration
 
@@ -113,7 +113,6 @@ class FirenzeTrafficConverter extends EventConverter with Logging {
       }.toList
 
   }
-
 
   private def getTime(row: Data): Long = {
     val year = row.key.apply(2).toInt

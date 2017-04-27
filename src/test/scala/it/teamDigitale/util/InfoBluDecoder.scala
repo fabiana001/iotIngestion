@@ -4,11 +4,11 @@ import java.io.File
 import java.lang.Double
 import java.util.concurrent.ConcurrentMap
 
-import org.mapdb.{DB, DBMaker, HTreeMap, Serializer}
+import org.mapdb.{ DB, DBMaker, HTreeMap, Serializer }
 
 /**
-  * Created by fabiana on 20/04/17.
-  */
+ * Created by fabiana on 20/04/17.
+ */
 object InfoBluDecoder {
 
   val classLoader = getClass().getClassLoader()
@@ -18,10 +18,10 @@ object InfoBluDecoder {
   val (mapSource, dbSource) = getMap(srcFile)
   val (mapEnd, dbEnd) = getMap(dstFile)
 
-  def getMap(file: String) : (ConcurrentMap[String, String], DB)= {
+  def getMap(file: String): (ConcurrentMap[String, String], DB) = {
 
     val f = new File(file)
-    if(f.exists())
+    if (f.exists())
       f.delete()
 
     val db: DB = DBMaker
@@ -35,7 +35,6 @@ object InfoBluDecoder {
     (map, db)
   }
 
-
   def closeAll(): Unit = {
     dbSource.close()
     dbEnd.close()
@@ -44,10 +43,10 @@ object InfoBluDecoder {
   def run(): (ConcurrentMap[String, String], ConcurrentMap[String, String]) = {
 
     val lines = scala.io.Source.fromFile(file).getLines().drop(3)
-    lines.foreach{l =>
+    lines.foreach { l =>
       val tokens = l.split(";")
       val sourceKey = tokens(1)
-      val sourceLat= tokens(2).replace(",", ".").toDouble
+      val sourceLat = tokens(2).replace(",", ".").toDouble
       val sourceLon = tokens(3).replace(",", ".").toDouble
       val sourceLatLon = s"$sourceLat-$sourceLon"
 
@@ -66,6 +65,6 @@ object InfoBluDecoder {
   }
 
   def main(args: Array[String]): Unit = {
-   val (a,b) = run()
+    val (a, b) = run()
   }
 }

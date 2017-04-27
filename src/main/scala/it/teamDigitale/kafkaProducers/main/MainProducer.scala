@@ -1,16 +1,16 @@
 package it.teamDigitale.kafkaProducers.main
 
 import java.util.Properties
-import java.util.concurrent.{Executors, ScheduledFuture, TimeUnit}
+import java.util.concurrent.{ Executors, ScheduledFuture, TimeUnit }
 
 import com.typesafe.config.ConfigFactory
 import it.teamDigitale.kafkaProducers.KafkaEventProducer
-import it.teamDigitale.kafkaProducers.eventConverters.{EventConverter, FirenzeTrafficConverter, TorinoParkingConverter, TorinoTrafficConverter}
+import it.teamDigitale.kafkaProducers.eventConverters.{ EventConverter, FirenzeTrafficConverter, TorinoParkingConverter, TorinoTrafficConverter }
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.logging.log4j.scala.Logging
 import org.slf4j.LoggerFactory
 
-import scala.reflect.{ClassTag, classTag}
+import scala.reflect.{ ClassTag, classTag }
 
 /**
  * Created by fabiana on 30/03/17.
@@ -40,8 +40,6 @@ object MainProducer extends Logging {
 
   def main(args: Array[String]): Unit = {
 
-
-
     args match {
 
       case Array(producerType: String, period: String) =>
@@ -66,7 +64,6 @@ object MainProducer extends Logging {
                        | <period> : period in seconds between two successive executions
                      """
         Console.err.println(string)
-
 
     }
 
