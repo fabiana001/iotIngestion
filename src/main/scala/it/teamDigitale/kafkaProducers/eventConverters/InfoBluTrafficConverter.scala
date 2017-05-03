@@ -14,7 +14,8 @@ import scala.xml.{NodeSeq, XML}
 class InfoBluTrafficConverter extends EventConverter{
   import InfoBluTrafficConverter._
 
-  val (srcMap, dstMap) = InfoBluDecoder.run()
+  val infoBluDec = new InfoBluDecoder(InfoBluTrafficConverter.coordinatesCSV)
+  val (srcMap, dstMap) = infoBluDec.run()
 
   override def convert(time: Map[String, Long] = Map()): (Map[String, Long], Option[Seq[Array[Byte]]]) = {
     val xml = XML.load(url)
@@ -72,11 +73,15 @@ class InfoBluTrafficConverter extends EventConverter{
 }
 
 object InfoBluTrafficConverter {
-  val url = ConfigFactory.load().getString("spark-dataIngestion-example.urls.infobluTraffic")
+  val config = ConfigFactory.load()
+  val url = config.getString("spark-dataIngestion-example.urls.infobluTraffic")
   val sourceCode = "@S"
   val endCode = "@E"
   val offset = "@P"
   val velocity = "@V"
 
   val measure = "opendata.infoblu.speed"
+
+  val coordinatesCSV = config.getString("spark-dataIngestion-example.infoblu.coordinates")
+
 }

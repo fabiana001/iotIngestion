@@ -7,8 +7,8 @@
         </Console>
 
         <!-- This logs all log messages -->
-        <RollingFile name="File" fileName="logs/iotIngestion.log"
-                     filePattern="logs/iotIngestion-%i.log.gz" append="false">
+        <RollingFile name="File" fileName="logs/INFO.iotIngestion.${date:yyyyMMdd-HHmmss}.log"
+                     filePattern="logs/INFO.${date:yyyyMMdd-HHmmss}.-%i.log.gz" append="false">
             <PatternLayout pattern="%d{yyyy MMM dd HH:mm:ss.SSS Z}  -  [%t] %-5p %c - %m%ex%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="100 MB"/>
@@ -16,17 +16,8 @@
             <DefaultRolloverStrategy max="5"/>
         </RollingFile>
 
-        <RollingFile name="FileConsumers" fileName="logs/consumers.log"
-                     filePattern="logs/consumers-%i.log.gz" append="false">
-            <PatternLayout pattern="%d{yyyy MMM dd HH:mm:ss.SSS Z}  -  [%t] %-5p %c - %m%ex%n"/>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="100 MB"/>
-            </Policies>
-            <DefaultRolloverStrategy max="5"/>
-        </RollingFile>
-
-        <RollingFile name="FileProducers" fileName="logs/producers.log"
-                     filePattern="logs/producers-%i.log.gz" append="false">
+        <RollingFile name="FileError" fileName="logs/ERROR.iotIngestion.${date:yyyyMMdd-HHmmss}.log"
+                     filePattern="logs/ERROR.iotIngestion.${date:yyyyMMdd-HHmmss}-%i.log.gz" append="false">
             <PatternLayout pattern="%d{yyyy MMM dd HH:mm:ss.SSS Z}  -  [%t] %-5p %c - %m%ex%n"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="100 MB"/>
@@ -36,19 +27,11 @@
 
     </Appenders>
     <Loggers>
-        <Root level="debug">
+        <Root level="info">
             <AppenderRef ref="File"/>
+            <AppenderRef ref="FileError" level="error"/>
             <AppenderRef ref="Console"/>
         </Root>
-        <Logger name="it.teamDigitale.consumers.sparkStreaming" level="error">
-            <AppenderRef ref="FileConsumers"/>
-        </Logger>
-        <Logger name="it.teamDigitale.kafkaProducers" level="error">
-            <AppenderRef ref="FileProducers"/>
-        </Logger>
-        <!--Logger name="org.apache.kafka.clients" level="warn">
-            <AppenderRef ref="Console">
-        </Logger-->
     </Loggers>
 
 </Configuration>

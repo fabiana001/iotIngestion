@@ -4,21 +4,21 @@ import java.io.Serializable
 import java.util.Properties
 
 import it.teamDigitale.kafkaProducers.eventConverters.EventConverter
-import org.apache.kafka.clients.producer.{ KafkaProducer, ProducerRecord }
-import org.slf4j.{ Logger, LoggerFactory }
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord}
+import org.apache.logging.log4j.scala.Logging
+import org.slf4j.{Logger, LoggerFactory}
 
-import scala.reflect.{ ClassTag, classTag }
-import scala.util.{ Failure, Try }
+import scala.reflect.{ClassTag, classTag}
+import scala.util.{Failure, Try}
 
 /**
  * Created with <3 by Team Digitale
  *
  * It sends events to a kafka queue
  */
-class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic: String) {
+class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic: String) extends Logging{
 
   val producer = new KafkaProducer[Array[Byte], Array[Byte]](props)
-  val logger: Logger = LoggerFactory.getLogger(this.getClass)
   val converter: T = classTag[T].runtimeClass.newInstance().asInstanceOf[T with Serializable]
 
   def run(timeMap: Map[String, Long] = Map.empty): Map[String, Long] = {
@@ -32,6 +32,7 @@ class KafkaEventProducer[T <: EventConverter: ClassTag](props: Properties, topic
     }
 
     if (avro.nonEmpty) {
+      logger.info(s"Extracted ${avro.get.size} elements")
       producer.flush()
     }
     newTimeMap

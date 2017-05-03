@@ -7,14 +7,16 @@ import com.typesafe.config.ConfigFactory
 import it.teamDigitale.kafkaProducers.KafkaEventProducer
 import it.teamDigitale.kafkaProducers.eventConverters._
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.logging.log4j.{LogManager, ThreadContext}
 import org.apache.logging.log4j.scala.Logging
+import org.apache.logging.log4j.spi.LoggerContext
 import org.slf4j.LoggerFactory
 
 import scala.reflect.{ClassTag, classTag}
 
 /**
- * Created by fabiana on 30/03/17.
- */
+  * Created by fabiana on 30/03/17.
+  */
 object MainProducer extends Logging {
 
   var config = ConfigFactory.load()
@@ -43,7 +45,9 @@ object MainProducer extends Logging {
     args match {
 
       case Array(producerType: String, period: String) =>
+        logger.error("This comment is only to check if log4j2 works")
         val producer = Producer.withName(producerType)
+
         val kafkaEventProducer: KafkaEventProducer[_ <: EventConverter] = producer match {
           case Producer.FirenzeTraffic => new KafkaEventProducer[FirenzeTrafficConverter](props, topic)
           case Producer.TorinoParking => new KafkaEventProducer[TorinoParkingConverter](props, topic)
@@ -57,7 +61,6 @@ object MainProducer extends Logging {
         logger.debug(s"Execution at $timeStamp isFinished: ${thread.isDone}")
 
       case _ =>
-        logger.error("provaaaa")
         Console.err.println(s"wrong parameters for: ${args.mkString(" ")}")
 
         val string = """to run the jar do: java -Dconfig.file=./application.conf -cp "./iotingestion-1.0/iotingestion_2.11-1.0.jar:./iotingestion-1.0/lib/*" it.teamDigitale.kafkaProducers.main.MainProducer <producerType> <period>

@@ -4,21 +4,22 @@ import java.io.File
 import java.lang.Double
 import java.util.concurrent.ConcurrentMap
 
+import org.apache.logging.log4j.scala.Logging
 import org.mapdb.{DB, DBMaker, HTreeMap, Serializer}
 
 /**
   * Created by fabiana on 20/04/17.
   */
-object InfoBluDecoder {
+class InfoBluDecoder(file: String) extends Logging{
 
-  val classLoader = getClass().getClassLoader()
-  val file = classLoader.getResource("teamdigitale-Coordinate.csv").getPath
+  //val classLoader = getClass().getClassLoader()
+  //val file: String = classLoader.getResource("/teamdigitale-Coordinate.csv").getPath
   val srcFile = file.replace(".csv", "-Source.db")
   val dstFile = file.replace(".csv", "-End.db")
   val (mapSource, dbSource) = getMap(srcFile)
   val (mapEnd, dbEnd) = getMap(dstFile)
 
-  def getMap(file: String) : (ConcurrentMap[String, String], DB)= {
+  private def getMap(file: String) : (ConcurrentMap[String, String], DB)= {
 
     val f = new File(file)
     if(f.exists())
@@ -61,7 +62,7 @@ object InfoBluDecoder {
 
     //dbSource.close()
     //dbEnd.close()
-    println(s"DBs generated into \n \t $srcFile \n \t $dstFile")
+    logger.info(s"DBs generated into \n \t $srcFile \n \t $dstFile")
     (mapSource, mapEnd)
   }
 
